@@ -5,7 +5,8 @@ var closureTaskMessage = 'Builds a target with the closure compiler';
 /** Task for compiling project sources to single file "binaries". */
 module.exports = function(grunt) {
   grunt.registerMultiTask('closure', closureTaskMessage, function(namespace) {
-    switch(this.target) {
+    var targetPrefix = this.target.split('-')[0];
+    switch(targetPrefix) {
       case 'compile':
         return compileTask.call(this, grunt, namespace);
       case 'concat':
@@ -26,11 +27,13 @@ module.exports = function(grunt) {
  * @inner
  */
 var concatTask = function(grunt, opt_namespace) {
-  grunt.config.requires('closure.options.library');
-  var closureLibraryPath = grunt.config.get('closure.options.library');
+  var options = this.options();
 
-  var target =
-      opt_namespace || grunt.config.get('closure.options.defaultTarget');
+  grunt.config.requires('closure.options.library');
+
+  var closureLibraryPath = options.library;
+  var target = opt_namespace || options.defaultTarget;
+
   if (!target) {
     throw Error('Missing target namespace')
   }
@@ -62,16 +65,18 @@ var concatTask = function(grunt, opt_namespace) {
  * @inner
  */
 var compileTask = function(grunt, opt_namespace) {
+  var options = this.options();
+
   grunt.config.requires('closure.options.library');
-  grunt.config.requires('closure.options.compiler.flags');
-  grunt.config.requires('closure.options.compiler.jar');
+  grunt.config.requires('closure.options.compilerFlags');
+  grunt.config.requires('closure.options.compilerJar');
 
-  var closureLibraryPath = grunt.config.get('closure.options.library');
-  var flagFile = grunt.config.get('closure.options.compiler.flags');
-  var jarFile = grunt.config.get('closure.options.compiler.jar');
+  var closureLibraryPath = options.library;
+  var flagFile = options.compilerFlags;
+  var jarFile = options.compilerJar;
+  var externs = options.compilerExterns || [];
 
-  var target =
-      opt_namespace || grunt.config.get('closure.options.defaultTarget');
+  var target = opt_namespace || options.defaultTarget;
   if (!target) {
     throw Error('Missing target namespace')
   }
@@ -92,7 +97,8 @@ var compileTask = function(grunt, opt_namespace) {
     config.closureBuilder.options.compilerOpts = {
       'compilation_level': 'ADVANCED_OPTIMIZATIONS',
       'flagfile': flagFile,
-      'js': path.join(closureLibraryPath, 'closure', 'goog', 'deps.js')
+      'js': path.join(closureLibraryPath, 'closure', 'goog', 'deps.js'),
+      'externs': externs
     }
 
     generateAndRunClosureToolsTask(grunt, config);
@@ -138,7 +144,7 @@ var getBaseClosureBuilderConfig =
  */
 var generateAndRunClosureToolsTask = function(grunt, config) {
   grunt.log.write('Initing grunt config for grunt-closure-tools...');
-  grunt.initConfig(config);
+  grunt.config('closureBuilder', config.closureBuilder);
   grunt.log.ok();
 
   grunt.log.write('Loading npm task grunt-closure-tools...');

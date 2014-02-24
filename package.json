@@ -2,7 +2,6 @@
   "name": "logos",
   "version": "0.0.1",
   "description": "Simple comments",
-  "main": "logos.min.js",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -14,12 +13,12 @@
     "grunt-closure-tools": "~0.9.2"
   },
   "scripts": {
-    "make": "grunt minify && npm test",
+    "preinstall": "grunt init",
     "test": "grunt"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/erickj/js-base.git"
+    "url": "git://github.com/erickj/simple-comments.git"
   },
   "author": "ejohnson82@gmail.com",
   "license": "MIT"
