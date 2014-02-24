@@ -1,0 +1,13 @@
+package logos.protocol;
+
+import "user.proto";
+
+message Comment {
+  optional string body = 1;
+  optional int32 modified = 2;
+  optional User author = 3;
+}
+
+message Thread {
+  repeated Comment comments = 1;
+}
