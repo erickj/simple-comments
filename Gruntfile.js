@@ -62,6 +62,29 @@ module.exports = function(grunt) {
       }
     },
 
+    closureDepsWriter: {
+      options: {
+        closureLibraryPath: pathClosureLibrary,
+        root: [pathClosureLibrary + '/closure/goog'],
+        root_with_prefix: [
+          '"build/protobuf ../../../../build/protobuf"',
+          '"spec ../../../../spec"',
+          '"src/logos ../../../logos"'
+        ],
+        execOpts: {
+          maxBuffer: Math.pow(2, 30)
+        }
+      },
+      src: {
+        src: ['src/logos/**/*.js'],
+        dest: pathBuildClosure + '/deps.js'
+      },
+      spec: {
+        src: ['spec/**/*Spec.js'],
+        dest: pathBuildSpec + '/deps.js'
+      }
+    },
+
     closure: {
       options: {
         library: pathClosureLibrary,
@@ -140,34 +163,65 @@ module.exports = function(grunt) {
           specs : pathBuildSpec + '/**/*Spec.js'
         }
       }
+    },
+
+    jasmine_node: {
+      all: [pathBuildSpec]
+    },
+
+    'closure-bootstrap': {
+      spec: {
+        src: pathBuildSpec + '/deps.js'
+      }
     }
   });
 
   grunt.loadTasks('tasks');
 
+  grunt.loadNpmTasks('grunt-closure-tools');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-gjslint');
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
-  grunt.registerTask('init', ['clean', 'mkdirs']);
+  grunt.registerTask('init', ['clean', 'mkdirs', 'protobuf']);
+  grunt.registerTask('deps', ['init', 'closureDepsWriter']);
 
-  /** Task to clean, concat, run, and compile specs. */
-  grunt.registerTask('test', 'Run tests on the given namespace',
-      function(namespace) {
-    grunt.task.run('clean:spec');
-    grunt.task.run('mkdirs:build');
-    grunt.task.run('protobuf');
+  /** Task to bootstrap nodejs for using goog.require. */
+  grunt.registerMultiTask(
+      'closure-bootstrap', 'Bootstrap node for goog.require', function() {
+    grunt.task.run('deps');
+    require('./src/closure-library/closure/goog/bootstrap/nodejs.js');
+    this.files.forEach(function(files) {
+      files.src.forEach(function(depsFile) {
+        require(path.resolve(depsFile));
+      });
+    });
+  });
 
+  /** Task to run specs on nodejs. */
+  grunt.registerTask(
+      'server-specs', 'Run jasmine tests on node', function() {
+    grunt.task.run('closure-bootstrap:spec');
+    grunt.task.run('jasmine_node');
+  });
+
+  /** Task to run specs on phantomjs. */
+  grunt.registerTask(
+      'client-specs', 'Run jasmine tests on node', function() {
     var concatTask = 'closure:concat-spec';
     var compileTask = 'closure:compile-spec';
-    if (namespace) {
-      concatTask += ':' + namespace;
-      compileTask += ':' + namespace;
-    }
+    grunt.task.run('init');
     grunt.task.run(concatTask);
     grunt.task.run('jasmine:all');
     grunt.task.run(compileTask);
   });
+
+  // TODO(erick): server-specs must run before client-specs currently. I think
+  // this is because of how the closureBuilder task is dynamically built.
+  /** Task to clean, concat, run, and compile specs. */
+  grunt.registerTask('test', 'Runs specs for client or server target ',
+      ['server-specs', 'client-specs']);
 
   grunt.registerTask('default', 'test');
 };
