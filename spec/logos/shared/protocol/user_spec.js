@@ -5,9 +5,21 @@ goog.require('logos.protocol.User');
 
 /** Tests for {@code logos.protocol.User}. */
 describe('logos.protocol.User', function() {
+  var user;
+
+  beforeEach(function() {
+    user = new logos.protocol.User();
+  });
+
+  describe('constructor', function() {
+    it('can be constructed', function() {
+      expect(
+          new logos.protocol.User()).toEqual(jasmine.any(logos.protocol.User));
+    });
+  });
+
   describe('email', function() {
-    it('can be set', function() {
-      var user = new logos.protocol.User();
+    it('#set*, #get*, #has*', function() {
       expect(user.hasEmail()).toBe(false);
       expect(user.getEmail()).toBe(null);
 
