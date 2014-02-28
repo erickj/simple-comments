@@ -43,7 +43,9 @@ var concatTask = function(grunt, opt_namespace) {
 
   this.files.forEach(function(files) {
     var srcFiles = files.src;
-    var destFile = path.join(files.dest, target + '.js');
+    var destFile = files.dest.match(/.*\.js$/) ?
+        files.dest :
+        path.join(files.dest, target + '.js');
 
     var config =
         getBaseClosureBuilderConfig(srcFiles, destFile, closureLibraryPath);

@@ -31,9 +31,9 @@ if (!fs.existsSync(pathClosureLibrary)) {
 var pathSpec = 'spec';
 
 var pathBuildRoot = 'build';
-var pathBuildProtocolBuffers = path.join(pathBuildRoot, 'protobuf');
-var pathBuildClosure = path.join(pathBuildRoot, 'closure');
-var pathBuildSpec = path.join(pathBuildRoot, 'spec');
+var pathBuildProtocolBuffers = 'build/protobuf';
+var pathBuildClosure = 'build/closure';
+var pathBuildSpec = 'build/spec';
 
 module.exports = function(grunt) {
   grunt.initConfig({
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
 
       'concat-spec': {
         options: {
-          defaultTarget: 'spec.logos.protocol.UserSpec'
+          defaultTarget: 'genspecdeps.all'
         },
         src: [
           pathClosureLibrary,
@@ -121,13 +121,13 @@ module.exports = function(grunt) {
           pathBuildProtocolBuffers,
           pathSpec
         ],
-        dest: pathBuildSpec
+        dest: pathBuildSpec + '/concat.spec.js'
       },
 
       'compile-spec': {
         options: {
           compilerExterns: 'externs/jasmine.js',
-          defaultTarget: 'spec.logos.protocol.UserSpec'
+          defaultTarget: 'genspecdeps.all'
         },
         src: [
           pathClosureLibrary,
@@ -157,10 +157,20 @@ module.exports = function(grunt) {
       }
     },
 
+    genspecdeps: {
+      all: {
+        options: {
+          provideTarget: 'genspecdeps.all'
+        },
+        src: 'spec/**/*.js',
+        dest: pathSpec
+      }
+    },
+
     jasmine: {
       all: {
         options : {
-          specs : pathBuildSpec + '/**/*Spec.js'
+          specs : pathBuildSpec + '/**/*spec.js'
         }
       }
     },
@@ -212,6 +222,7 @@ module.exports = function(grunt) {
     var concatTask = 'closure:concat-spec';
     var compileTask = 'closure:compile-spec';
     grunt.task.run('init');
+    grunt.task.run('genspecdeps:all');
     grunt.task.run(concatTask);
     grunt.task.run('jasmine:all');
     grunt.task.run(compileTask);
@@ -220,8 +231,12 @@ module.exports = function(grunt) {
   // TODO(erick): server-specs must run before client-specs currently. I think
   // this is because of how the closureBuilder task is dynamically built.
   /** Task to clean, concat, run, and compile specs. */
-  grunt.registerTask('test', 'Runs specs for client or server target ',
+  grunt.registerTask('test-all', 'Runs specs for client and server targets ',
       ['server-specs', 'client-specs']);
 
-  grunt.registerTask('default', 'test');
+  /** Task to clean, concat, run, and compile specs. */
+  grunt.registerTask('test-fast', 'Runs specs for server targets ',
+      ['server-specs']);
+
+  grunt.registerTask('default', 'test-fast');
 };
