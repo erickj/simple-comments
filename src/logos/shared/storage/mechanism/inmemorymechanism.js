@@ -6,6 +6,9 @@ goog.require('goog.storage.mechanism.Mechanism');
 
 /**
  * A simple in memory storage mechanism.
+ *
+ * NB: This doesn't actually extend {@code goog.storage.mechanism.Mechanism}, it
+ * is actually just implementing an ill-conceived interface.
  * @constructor
  * @extends {goog.storage.mechanism.Mechanism}
  * @final
