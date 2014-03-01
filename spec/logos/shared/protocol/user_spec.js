@@ -1,20 +1,20 @@
-goog.provide('spec.logos.protocol.UserSpec');
+goog.provide('spec.logos.protocol.messages.UserSpec');
 
-goog.require('logos.protocol.User');
+goog.require('logos.protocol.messages.User');
 
 
-/** Tests for {@code logos.protocol.User}. */
-describe('logos.protocol.User', function() {
+/** Tests for {@code logos.protocol.messages.User}. */
+describe('logos.protocol.messages.User', function() {
   var user;
 
   beforeEach(function() {
-    user = new logos.protocol.User();
+    user = new logos.protocol.messages.User();
   });
 
   describe('constructor', function() {
     it('can be constructed', function() {
-      expect(
-          new logos.protocol.User()).toEqual(jasmine.any(logos.protocol.User));
+      expect(new logos.protocol.messages.User()).toEqual(
+          jasmine.any(logos.protocol.messages.User));
     });
   });
 

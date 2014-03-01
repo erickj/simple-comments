@@ -1,6 +1,6 @@
-package logos.protocol;
+syntax = "proto2";
 
-import "user.proto";
+package logos.protocol.messages;
 
 message Comment {
   optional string body = 1;
@@ -11,3 +11,8 @@ message Comment {
 message Thread {
   repeated Comment comments = 1;
 }
+
+message User {
+  optional string email = 1;
+}
+
