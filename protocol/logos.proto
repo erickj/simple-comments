@@ -2,17 +2,73 @@ syntax = "proto2";
 
 package logos.protocol.messages;
 
-message Comment {
-  optional string body = 1;
-  optional int32 modified = 2;
-  optional User author = 3;
+message Command {
+  optional Type type = 1 [default = NOOP];
+
+  enum Type {
+    NOOP = 1;
+    MULTI = 2;
+    ADD_CONVERSATION = 4;
+    ADD_THREAD = 5;
+    ADD_COMMENT = 6;
+  }
+
+  optional NoopCommand noop_command = 2;
+  optional MultiCommand multi_command = 3;
+  optional AddConversationCommand add_conversation_command = 4;
+  optional AddThreadCommand add_thread_command = 5;
+  optional AddCommentCommand add_comment_command = 6;
+
+  message NoopCommand {}
+
+  message MultiCommand {
+    repeated Command command = 1;
+  }
+
+  message AddConversationCommand {
+    optional Conversation conversation = 1;
+  }
+
+  message AddThreadCommand {
+    optional Thread thread = 1;
+    optional string conversation_guid = 2;
+  }
+
+  message AddCommentCommand {
+    optional Comment comment = 1;
+    optional string conversation_guid = 2;
+    optional string thread_guid = 3;
+  }
 }
 
+/** A conversation has many threads. */
+message Conversation {
+  optional string guid = 1;
+}
+
+/** A conversation has many comments. */
 message Thread {
-  repeated Comment comments = 1;
+  optional string guid = 1;
+  optional Topic topic = 2;
+}
+
+message Comment {
+  optional string guid = 1;
+  optional string body = 2;
+  optional int32 modified_timestamp = 3;
+  optional User author = 4;
+}
+
+message Topic {
+  optional Type type = 1 [default = MAIN];
+
+  // TODO(erick): I feel like Topic type is a major extensibility
+  // mistake waiting to happen.
+  enum Type {
+    MAIN = 1;
+  }
 }
 
 message User {
-  optional string email = 1;
+  optional string email = 1 [default = "anonymous.coward@example.com"];
 }
-
