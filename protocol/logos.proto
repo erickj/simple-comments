@@ -2,6 +2,17 @@ syntax = "proto2";
 
 package logos.protocol.messages;
 
+/**
+ * Unfortunately, neither goog.proto2.Message nor protobuf-plugin-closure
+ * support protobuf extensions. This could help solve the "union type" problem
+ * that the Command#type field is used for. It would also allow for an elegant
+ * extension mechanism outside of this file, but it's just not possible without
+ * a lot of work.
+ *
+ * @see https://code.google.com/p/protobuf-plugin-closure/issues/detail?id=7
+ * @see https://groups.google.com/forum/#!msg/protobuf/XcXGlcIDxLM/DLLuRqU9N88J
+ * For the second link read the message by Kenton Varda, author of proto2.
+ */
 message Command {
   optional Type type = 1 [default = NOOP];
 
