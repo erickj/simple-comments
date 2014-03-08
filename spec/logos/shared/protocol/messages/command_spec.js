@@ -59,7 +59,7 @@ describe('logos.protocol.messages.Command', function() {
       descriptor = logos.protocol.messages.Command.getDescriptor();
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
-        '1': 1,
+        '1': 2,
         '2': {}
       };
     });

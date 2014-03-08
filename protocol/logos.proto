@@ -2,6 +2,10 @@ syntax = "proto2";
 
 package logos.protocol.messages;
 
+message CommandSet {
+  repeated Command command = 1;
+}
+
 /**
  * Unfortunately, neither goog.proto2.Message nor protobuf-plugin-closure
  * support protobuf extensions. This could help solve the "union type" problem
@@ -17,24 +21,19 @@ message Command {
   optional Type type = 1 [default = NOOP];
 
   enum Type {
-    NOOP = 1;
-    MULTI = 2;
-    ADD_CONVERSATION = 4;
-    ADD_THREAD = 5;
-    ADD_COMMENT = 6;
+    // Skip 1 so that Type values match Command tags
+    NOOP = 2;
+    ADD_CONVERSATION = 3;
+    ADD_THREAD = 4;
+    ADD_COMMENT = 5;
   }
 
   optional NoopCommand noop_command = 2;
-  optional MultiCommand multi_command = 3;
-  optional AddConversationCommand add_conversation_command = 4;
-  optional AddThreadCommand add_thread_command = 5;
-  optional AddCommentCommand add_comment_command = 6;
+  optional AddConversationCommand add_conversation_command = 3;
+  optional AddThreadCommand add_thread_command = 4;
+  optional AddCommentCommand add_comment_command = 5;
 
   message NoopCommand {}
-
-  message MultiCommand {
-    repeated Command command = 1;
-  }
 
   message AddConversationCommand {
     optional Conversation conversation = 1;
@@ -42,29 +41,29 @@ message Command {
 
   message AddThreadCommand {
     optional Thread thread = 1;
-    optional string conversation_guid = 2;
+    optional string conversation_id = 2;
   }
 
   message AddCommentCommand {
     optional Comment comment = 1;
-    optional string conversation_guid = 2;
-    optional string thread_guid = 3;
+    optional string conversation_id = 2;
+    optional string thread_id = 3;
   }
 }
 
 /** A conversation has many threads. */
 message Conversation {
-  optional string guid = 1;
+  optional string id = 1;
 }
 
 /** A conversation has many comments. */
 message Thread {
-  optional string guid = 1;
+  optional string id = 1;
   optional Topic topic = 2;
 }
 
 message Comment {
-  optional string guid = 1;
+  optional string id = 1;
   optional string body = 2;
   optional int32 modified_timestamp = 3;
   optional User author = 4;

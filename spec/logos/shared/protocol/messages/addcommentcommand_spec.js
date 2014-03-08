@@ -36,27 +36,27 @@ describe('logos.protocol.messages.Command.AddCommentCommand', function() {
       });
     });
 
-    describe('conversation_guid', function() {
+    describe('conversation_id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasConversationGuid()).toBe(false);
-        expect(message.getConversationGuid()).toBe(null);
-        expect(message.getConversationGuidOrDefault()).toBe('');
+        expect(message.hasConversationId()).toBe(false);
+        expect(message.getConversationId()).toBe(null);
+        expect(message.getConversationIdOrDefault()).toBe('');
 
-        message.setConversationGuid('cguidy');
-        expect(message.hasConversationGuid()).toBe(true);
-        expect(message.getConversationGuid()).toBe('cguidy');
+        message.setConversationId('cidy');
+        expect(message.hasConversationId()).toBe(true);
+        expect(message.getConversationId()).toBe('cidy');
       });
     });
 
-    describe('thread_guid', function() {
+    describe('thread_id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasThreadGuid()).toBe(false);
-        expect(message.getThreadGuid()).toBe(null);
-        expect(message.getThreadGuidOrDefault()).toBe('');
+        expect(message.hasThreadId()).toBe(false);
+        expect(message.getThreadId()).toBe(null);
+        expect(message.getThreadIdOrDefault()).toBe('');
 
-        message.setThreadGuid('tguidy');
-        expect(message.hasThreadGuid()).toBe(true);
-        expect(message.getThreadGuid()).toBe('tguidy');
+        message.setThreadId('tidy');
+        expect(message.hasThreadId()).toBe(true);
+        expect(message.getThreadId()).toBe('tidy');
       });
     });
   });
@@ -72,11 +72,11 @@ describe('logos.protocol.messages.Command.AddCommentCommand', function() {
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
         '1': {
-          '1': 'comment-guid',
+          '1': 'comment-id',
           '2': 'body body'
         },
-        '2': 'convo-guid',
-        '3': 'thread-guid'
+        '2': 'convo-id',
+        '3': 'thread-id'
       };
     });
 
@@ -86,20 +86,20 @@ describe('logos.protocol.messages.Command.AddCommentCommand', function() {
           logos.protocol.messages.Command.AddCommentCommand));
 
       var expectedComment = new logos.protocol.messages.Comment();
-      expectedComment.setGuid('comment-guid');
+      expectedComment.setId('comment-id');
       expectedComment.setBody('body body');
       expect(message.getComment()).toEqual(expectedComment);
-      expect(message.getConversationGuid()).toBe('convo-guid');
-      expect(message.getThreadGuid()).toBe('thread-guid');
+      expect(message.getConversationId()).toBe('convo-id');
+      expect(message.getThreadId()).toBe('thread-id');
     });
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Command.AddCommentCommand();
-      message.setConversationGuid('convo-guid');
-      message.setThreadGuid('thread-guid');
+      message.setConversationId('convo-id');
+      message.setThreadId('thread-id');
 
       var expectedComment = new logos.protocol.messages.Comment();
-      expectedComment.setGuid('comment-guid');
+      expectedComment.setId('comment-id');
       expectedComment.setBody('body body');
       message.setComment(expectedComment);
       expect(serializer.serialize(message)).toEqual(serializedMessage);

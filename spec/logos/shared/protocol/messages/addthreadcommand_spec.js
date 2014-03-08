@@ -29,22 +29,22 @@ describe('logos.protocol.messages.Command.AddThreadCommand', function() {
             new logos.protocol.messages.Thread());
 
         var thread = new logos.protocol.messages.Thread();
-        thread.setGuid('t-guid');
+        thread.setId('t-id');
         message.setThread(thread);
         expect(message.hasThread()).toBe(true);
         expect(message.getThread()).toBe(thread);
       });
     });
 
-    describe('conversation_guid', function() {
+    describe('conversation_id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasConversationGuid()).toBe(false);
-        expect(message.getConversationGuid()).toBe(null);
-        expect(message.getConversationGuidOrDefault()).toBe('');
+        expect(message.hasConversationId()).toBe(false);
+        expect(message.getConversationId()).toBe(null);
+        expect(message.getConversationIdOrDefault()).toBe('');
 
-        message.setConversationGuid('cguidy');
-        expect(message.hasConversationGuid()).toBe(true);
-        expect(message.getConversationGuid()).toBe('cguidy');
+        message.setConversationId('cidy');
+        expect(message.hasConversationId()).toBe(true);
+        expect(message.getConversationId()).toBe('cidy');
       });
     });
   });
@@ -60,9 +60,9 @@ describe('logos.protocol.messages.Command.AddThreadCommand', function() {
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
         '1': {
-          '1': 'thread-guid'
+          '1': 'thread-id'
         },
-        '2': 'convo-guid'
+        '2': 'convo-id'
       };
     });
 
@@ -72,17 +72,17 @@ describe('logos.protocol.messages.Command.AddThreadCommand', function() {
           logos.protocol.messages.Command.AddThreadCommand));
 
       var expectedThread = new logos.protocol.messages.Thread();
-      expectedThread.setGuid('thread-guid');
+      expectedThread.setId('thread-id');
       expect(message.getThread()).toEqual(expectedThread);
-      expect(message.getConversationGuid()).toBe('convo-guid');
+      expect(message.getConversationId()).toBe('convo-id');
     });
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Command.AddThreadCommand();
-      message.setConversationGuid('convo-guid');
+      message.setConversationId('convo-id');
 
       var expectedThread = new logos.protocol.messages.Thread();
-      expectedThread.setGuid('thread-guid');
+      expectedThread.setId('thread-id');
       message.setThread(expectedThread);
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });

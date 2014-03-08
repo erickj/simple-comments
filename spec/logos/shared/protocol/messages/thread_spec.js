@@ -22,15 +22,15 @@ describe('logos.protocol.messages.Thread', function() {
   });
 
   describe('fields', function() {
-    describe('guid', function() {
+    describe('id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasGuid()).toBe(false);
-        expect(message.getGuid()).toBe(null);
-        expect(message.getGuidOrDefault()).toBe('');
+        expect(message.hasId()).toBe(false);
+        expect(message.getId()).toBe(null);
+        expect(message.getIdOrDefault()).toBe('');
 
-        message.setGuid('guidy');
-        expect(message.hasGuid()).toBe(true);
-        expect(message.getGuid()).toBe('guidy');
+        message.setId('idy');
+        expect(message.hasId()).toBe(true);
+        expect(message.getId()).toBe('idy');
       });
     });
 
@@ -68,7 +68,7 @@ describe('logos.protocol.messages.Thread', function() {
     it('deserializes from JSON', function() {
       var message = serializer.deserialize(descriptor, serializedMessage);
       expect(message).toEqual(jasmine.any(logos.protocol.messages.Thread));
-      expect(message.getGuid()).toBe('xyz123');
+      expect(message.getId()).toBe('xyz123');
 
       var topic = new logos.protocol.messages.Topic();
       topic.setType(logos.protocol.messages.Topic.Type.MAIN);
@@ -77,7 +77,7 @@ describe('logos.protocol.messages.Thread', function() {
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Thread();
-      message.setGuid('xyz123');
+      message.setId('xyz123');
       var topic = new logos.protocol.messages.Topic();
       topic.setType(logos.protocol.messages.Topic.Type.MAIN);
       message.setTopic(topic);

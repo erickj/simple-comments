@@ -1,24 +1,24 @@
-goog.provide('spec.logos.protocol.messages.Command.MultiCommandSpec');
+goog.provide('spec.logos.protocol.messages.CommandSetSpec');
 
 goog.require('goog.proto2.ObjectSerializer');
 goog.require('logos.protocol.messages.Command');
-goog.require('logos.protocol.messages.Command.MultiCommand');
+goog.require('logos.protocol.messages.CommandSet');
 goog.require('logos.protocol.messages.Command.NoopCommand');
 goog.require('logos.protocol.messages.Command.Type');
 
 
-/** Tests for {@code logos.protocol.messages.Command.MultiCommand}. */
-describe('logos.protocol.messages.Command.MultiCommand', function() {
+/** Tests for {@code logos.protocol.messages.CommandSet}. */
+describe('logos.protocol.messages.CommandSet', function() {
   var message;
 
   beforeEach(function() {
-    message = new logos.protocol.messages.Command.MultiCommand();
+    message = new logos.protocol.messages.CommandSet();
   });
 
   describe('constructor', function() {
     it('can be constructed', function() {
-      expect(new logos.protocol.messages.Command.MultiCommand()).toEqual(
-          jasmine.any(logos.protocol.messages.Command.MultiCommand));
+      expect(new logos.protocol.messages.CommandSet()).toEqual(
+          jasmine.any(logos.protocol.messages.CommandSet));
     });
   });
 
@@ -51,11 +51,11 @@ describe('logos.protocol.messages.Command.MultiCommand', function() {
 
     beforeEach(function() {
       descriptor =
-          logos.protocol.messages.Command.MultiCommand.getDescriptor();
+          logos.protocol.messages.CommandSet.getDescriptor();
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
         '1': [
-          { '1': 1, '2': {}}
+          { '1': 2, '2': {}}
         ]
       };
     });
@@ -63,7 +63,7 @@ describe('logos.protocol.messages.Command.MultiCommand', function() {
     it('deserializes from JSON', function() {
       var message = serializer.deserialize(descriptor, serializedMessage);
       expect(message).toEqual(jasmine.any(
-          logos.protocol.messages.Command.MultiCommand));
+          logos.protocol.messages.CommandSet));
 
       var command = message.getCommand(0);
       expect(command).toEqual(
@@ -73,7 +73,7 @@ describe('logos.protocol.messages.Command.MultiCommand', function() {
     });
 
     it('serializes to JSON', function() {
-      var message = new logos.protocol.messages.Command.MultiCommand();
+      var message = new logos.protocol.messages.CommandSet();
       var command = new logos.protocol.messages.Command();
       command.setType(logos.protocol.messages.Command.Type.NOOP);
       command.setNoopCommand(new logos.protocol.messages.Command.NoopCommand());

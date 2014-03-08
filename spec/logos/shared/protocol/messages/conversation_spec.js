@@ -20,15 +20,15 @@ describe('logos.protocol.messages.Conversation', function() {
   });
 
   describe('fields', function() {
-    describe('guid', function() {
+    describe('id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasGuid()).toBe(false);
-        expect(message.getGuid()).toBe(null);
-        expect(message.getGuidOrDefault()).toBe('');
+        expect(message.hasId()).toBe(false);
+        expect(message.getId()).toBe(null);
+        expect(message.getIdOrDefault()).toBe('');
 
-        message.setGuid('guidy');
-        expect(message.hasGuid()).toBe(true);
-        expect(message.getGuid()).toBe('guidy');
+        message.setId('idy');
+        expect(message.hasId()).toBe(true);
+        expect(message.getId()).toBe('idy');
       });
     });
   });
@@ -50,12 +50,12 @@ describe('logos.protocol.messages.Conversation', function() {
       var message = serializer.deserialize(descriptor, serializedMessage);
       expect(message).toEqual(jasmine.any(
           logos.protocol.messages.Conversation));
-      expect(message.getGuid()).toBe('xyz123');
+      expect(message.getId()).toBe('xyz123');
     });
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Conversation();
-      message.setGuid('xyz123');
+      message.setId('xyz123');
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });
   });

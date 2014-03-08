@@ -47,7 +47,7 @@ describe('logos.protocol.messages.Command.AddConversationCommand', function() {
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
         '1': {
-          '1': 'conversation-guid'
+          '1': 'conversation-id'
         }
       };
     });
@@ -58,14 +58,14 @@ describe('logos.protocol.messages.Command.AddConversationCommand', function() {
           logos.protocol.messages.Command.AddConversationCommand));
 
       var expectedConversation = new logos.protocol.messages.Conversation();
-      expectedConversation.setGuid('conversation-guid');
+      expectedConversation.setId('conversation-id');
       expect(message.getConversation()).toEqual(expectedConversation);
     });
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Command.AddConversationCommand();
       var expectedConversation = new logos.protocol.messages.Conversation();
-      expectedConversation.setGuid('conversation-guid');
+      expectedConversation.setId('conversation-id');
       message.setConversation(expectedConversation);
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });

@@ -21,15 +21,15 @@ describe('logos.protocol.messages.Comment', function() {
   });
 
   describe('fields', function() {
-    describe('guid', function() {
+    describe('id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasGuid()).toBe(false);
-        expect(message.getGuid()).toBe(null);
-        expect(message.getGuidOrDefault()).toBe('');
+        expect(message.hasId()).toBe(false);
+        expect(message.getId()).toBe(null);
+        expect(message.getIdOrDefault()).toBe('');
 
-        message.setGuid('guidy');
-        expect(message.hasGuid()).toBe(true);
-        expect(message.getGuid()).toBe('guidy');
+        message.setId('idy');
+        expect(message.hasId()).toBe(true);
+        expect(message.getId()).toBe('idy');
       });
     });
 
@@ -95,7 +95,7 @@ describe('logos.protocol.messages.Comment', function() {
     it('deserializes from JSON', function() {
       var message = serializer.deserialize(descriptor, serializedMessage);
       expect(message).toEqual(jasmine.any(logos.protocol.messages.Comment));
-      expect(message.getGuid()).toBe('xyz123');
+      expect(message.getId()).toBe('xyz123');
       expect(message.getBody()).toBe('body body body');
       expect(message.getModifiedTimestamp()).toBe(10987654321);
 
@@ -106,7 +106,7 @@ describe('logos.protocol.messages.Comment', function() {
 
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Comment();
-      message.setGuid('xyz123');
+      message.setId('xyz123');
       message.setBody('body body body')
       message.setModifiedTimestamp(10987654321);
 
