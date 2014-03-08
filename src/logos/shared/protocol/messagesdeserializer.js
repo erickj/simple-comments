@@ -10,23 +10,24 @@ goog.require('logos.model.Comment');
 goog.require('logos.model.Conversation');
 goog.require('logos.model.Thread');
 goog.require('logos.model.User');
-goog.require('logos.protocol.messages.CommandSet');
 goog.require('logos.protocol.messages.Command');
-goog.require('logos.protocol.messages.Command.Type');
-goog.require('logos.protocol.messages.Command.NoopCommand');
+goog.require('logos.protocol.messages.Command.AddCommentCommand');
 goog.require('logos.protocol.messages.Command.AddConversationCommand');
 goog.require('logos.protocol.messages.Command.AddThreadCommand');
-goog.require('logos.protocol.messages.Command.AddCommentCommand');
+goog.require('logos.protocol.messages.Command.NoopCommand');
+goog.require('logos.protocol.messages.Command.Type');
+goog.require('logos.protocol.messages.CommandSet');
+goog.require('logos.protocol.messages.Comment');
 goog.require('logos.protocol.messages.Conversation');
 goog.require('logos.protocol.messages.Thread');
-goog.require('logos.protocol.messages.Comment');
 goog.require('logos.protocol.messages.Topic');
 goog.require('logos.protocol.messages.Topic.Type');
 goog.require('logos.protocol.messages.User');
 
 
+
 /**
- * Deserializes protocol command structures into commands.
+ * Deserializes protocol command structures into commands and models.
  * @constructor
  * @struct
  * @final
@@ -58,7 +59,7 @@ logos.protocol.MessagesDeserializer.prototype.deserializeCommand =
   var checkNotNull = logos.common.preconditions.checkNotNull;
   var Type = logos.protocol.messages.Command.Type;
   var protoCmd;
-  switch(protoCommand.getType()) {
+  switch (protoCommand.getType()) {
     case Type.NOOP:
       protoCmd =
           checkNotNull(protoCommand.getNoopCommand(), 'Missing Noop command');
@@ -102,8 +103,8 @@ logos.protocol.MessagesDeserializer.prototype.deserializeNoopCommand =
  * @param {!logos.protocol.messages.Command.AddConversationCommand} protoCommand
  * @return {!logos.command.AddConversationCommand}
  */
-logos.protocol.MessagesDeserializer.prototype.deserializeAddConversationCommand =
-    function(protoCommand) {
+logos.protocol.MessagesDeserializer.prototype.
+    deserializeAddConversationCommand = function(protoCommand) {
   var protoConversation = logos.common.preconditions.checkNotNull(
       protoCommand.getConversation(), 'Conversation is null');
   return new logos.command.AddConversationCommand(this.deserializeConversation(
@@ -118,7 +119,7 @@ logos.protocol.MessagesDeserializer.prototype.deserializeAddConversationCommand 
  */
 logos.protocol.MessagesDeserializer.prototype.deserializeAddThreadCommand =
     function(protoCommand) {
-  var conversationId =  logos.common.preconditions.checkNotNull(
+  var conversationId = logos.common.preconditions.checkNotNull(
       protoCommand.getConversationId(), 'Conversation id is null');
   var protoThread = logos.common.preconditions.checkNotNull(
       protoCommand.getThread(), 'Thread is null');
@@ -135,9 +136,9 @@ logos.protocol.MessagesDeserializer.prototype.deserializeAddThreadCommand =
  */
 logos.protocol.MessagesDeserializer.prototype.deserializeAddCommentCommand =
     function(protoCommand) {
-  var conversationId =  logos.common.preconditions.checkNotNull(
+  var conversationId = logos.common.preconditions.checkNotNull(
       protoCommand.getConversationId(), 'Conversation id is null');
-  var threadId =  logos.common.preconditions.checkNotNull(
+  var threadId = logos.common.preconditions.checkNotNull(
       protoCommand.getThreadId(), 'Thread id is null');
   var protoComment = logos.common.preconditions.checkNotNull(
       protoCommand.getComment(), 'Comment is null');
@@ -168,15 +169,15 @@ logos.protocol.MessagesDeserializer.prototype.deserializeConversation =
 logos.protocol.MessagesDeserializer.prototype.deserializeThread =
     function(protoThread) {
   var topic;
-  switch(protoThread.getTopic().getType()) {
+  switch (protoThread.getTopic().getType()) {
     case logos.protocol.messages.Topic.Type.MAIN:
       topic = logos.model.Thread.Topic.MAIN;
       break;
     default:
-      throw Error('Unknown topic ' + protoThread.getTopic())
+      throw Error('Unknown topic ' + protoThread.getTopic());
   }
   var id = logos.common.preconditions.checkNotNull(
-      protoThread.getId(), 'Thread id is null')
+      protoThread.getId(), 'Thread id is null');
   return new logos.model.Thread(/** @type {string} */ (id), topic);
 };
 
@@ -188,11 +189,11 @@ logos.protocol.MessagesDeserializer.prototype.deserializeThread =
 logos.protocol.MessagesDeserializer.prototype.deserializeComment =
     function(protoComment) {
   var id = logos.common.preconditions.checkNotNull(
-      protoComment.getId(), 'Comment id is null')
+      protoComment.getId(), 'Comment id is null');
   var body = logos.common.preconditions.checkNotNull(
-      protoComment.getBody(), 'Body is null')
+      protoComment.getBody(), 'Body is null');
   var timestamp = logos.common.preconditions.checkNotNull(
-      protoComment.getModifiedTimestamp(), 'Modified timestamp is null')
+      protoComment.getModifiedTimestamp(), 'Modified timestamp is null');
   var author = this.deserializeUser(
       /** @type {!logos.protocol.messages.User } */ (
           logos.common.preconditions.checkNotNull(
@@ -210,6 +211,6 @@ logos.protocol.MessagesDeserializer.prototype.deserializeComment =
 logos.protocol.MessagesDeserializer.prototype.deserializeUser =
     function(protoUser) {
   var email = logos.common.preconditions.checkNotNull(
-      protoUser.getEmail(), 'Email is null')
+      protoUser.getEmail(), 'Email is null');
   return new logos.model.User(/** @type {string} */ (email));
 };

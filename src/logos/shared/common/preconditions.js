@@ -8,6 +8,7 @@ goog.provide('logos.common.preconditions.IllegalStateException');
 goog.provide('logos.common.preconditions.NullPointerException');
 
 
+
 /**
  * @param {string=} opt_message
  * @constructor
@@ -20,6 +21,7 @@ logos.common.preconditions.IllegalArgumentException = function(opt_message) {
 goog.inherits(logos.common.preconditions.IllegalArgumentException, Error);
 
 
+
 /**
  * @param {string=} opt_message
  * @constructor
@@ -30,6 +32,7 @@ logos.common.preconditions.IllegalStateException = function(opt_message) {
   Error.apply(this, arguments);
 };
 goog.inherits(logos.common.preconditions.IllegalStateException, Error);
+
 
 
 /**

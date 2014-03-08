@@ -107,7 +107,7 @@ describe('logos.protocol.messages.Comment', function() {
     it('serializes to JSON', function() {
       var message = new logos.protocol.messages.Comment();
       message.setId('xyz123');
-      message.setBody('body body body')
+      message.setBody('body body body');
       message.setModifiedTimestamp(10987654321);
 
       var author = new logos.protocol.messages.User();

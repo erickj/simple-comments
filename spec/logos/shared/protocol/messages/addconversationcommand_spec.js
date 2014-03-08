@@ -15,8 +15,9 @@ describe('logos.protocol.messages.Command.AddConversationCommand', function() {
 
   describe('constructor', function() {
     it('can be constructed', function() {
-      expect(new logos.protocol.messages.Command.AddConversationCommand()).toEqual(
-          jasmine.any(logos.protocol.messages.Command.AddConversationCommand));
+      expect(new logos.protocol.messages.Command.AddConversationCommand()).
+          toEqual(jasmine.any(
+              logos.protocol.messages.Command.AddConversationCommand));
     });
   });
 
@@ -42,8 +43,8 @@ describe('logos.protocol.messages.Command.AddConversationCommand', function() {
     var serializedMessage;
 
     beforeEach(function() {
-      descriptor =
-          logos.protocol.messages.Command.AddConversationCommand.getDescriptor();
+      descriptor = logos.protocol.messages.Command.AddConversationCommand.
+          getDescriptor();
       serializer = new goog.proto2.ObjectSerializer();
       serializedMessage = {
         '1': {
@@ -63,7 +64,8 @@ describe('logos.protocol.messages.Command.AddConversationCommand', function() {
     });
 
     it('serializes to JSON', function() {
-      var message = new logos.protocol.messages.Command.AddConversationCommand();
+      var message =
+          new logos.protocol.messages.Command.AddConversationCommand();
       var expectedConversation = new logos.protocol.messages.Conversation();
       expectedConversation.setId('conversation-id');
       message.setConversation(expectedConversation);

@@ -12,4 +12,4 @@ logos.storage.ContainerStore = function() {};
  * @param {string} key
  * @return {!logos.storage.Result}
  */
-logos.storage.prototype.getRecord
+logos.storage.prototype.getRecord;

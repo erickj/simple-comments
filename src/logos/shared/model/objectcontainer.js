@@ -3,6 +3,7 @@ goog.provide('logos.model.ObjectContainer');
 goog.require('logos.model.Object');
 
 
+
 /**
  * @param {!Array.<logos.model.Object.Type>} allowedTypes
  * @constructor

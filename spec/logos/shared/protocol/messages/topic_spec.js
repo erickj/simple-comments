@@ -34,7 +34,7 @@ describe('logos.protocol.messages.Topic', function() {
 
       it('#getTypeOrDefault', function() {
         expect(message.getTypeOrDefault()).toBe(Type.MAIN);
-      })
+      });
     });
   });
 

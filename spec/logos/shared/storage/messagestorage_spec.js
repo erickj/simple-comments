@@ -47,15 +47,16 @@ describe('logos.storage.MessageStorage', function() {
       expect(messageStorage.get('key')).toBeNull();
     });
 
-    it('returns the deserialized message for a message previously #set', function() {
-      var userMessage = new logos.protocol.messages.User();
-      userMessage.setEmail('erick@j.com');
-      messageStorage.set('key', userMessage);
+    it('returns the deserialized message for a message previously #set',
+       function() {
+         var userMessage = new logos.protocol.messages.User();
+         userMessage.setEmail('erick@j.com');
+         messageStorage.set('key', userMessage);
 
-      var message = messageStorage.get('key');
-      expect(message).toEqual(jasmine.any(logos.protocol.messages.User));
-      expect(message.getEmail()).toBe('erick@j.com');
-    });
+         var message = messageStorage.get('key');
+         expect(message).toEqual(jasmine.any(logos.protocol.messages.User));
+         expect(message.getEmail()).toBe('erick@j.com');
+       });
   });
 
   describe('#remove', function() {

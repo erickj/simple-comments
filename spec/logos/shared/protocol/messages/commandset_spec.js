@@ -2,9 +2,9 @@ goog.provide('spec.logos.protocol.messages.CommandSetSpec');
 
 goog.require('goog.proto2.ObjectSerializer');
 goog.require('logos.protocol.messages.Command');
-goog.require('logos.protocol.messages.CommandSet');
 goog.require('logos.protocol.messages.Command.NoopCommand');
 goog.require('logos.protocol.messages.Command.Type');
+goog.require('logos.protocol.messages.CommandSet');
 
 
 /** Tests for {@code logos.protocol.messages.CommandSet}. */
@@ -77,7 +77,7 @@ describe('logos.protocol.messages.CommandSet', function() {
       var command = new logos.protocol.messages.Command();
       command.setType(logos.protocol.messages.Command.Type.NOOP);
       command.setNoopCommand(new logos.protocol.messages.Command.NoopCommand());
-      message.addCommand(command)
+      message.addCommand(command);
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });
   });

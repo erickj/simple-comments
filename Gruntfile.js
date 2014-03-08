@@ -147,7 +147,8 @@ module.exports = function(grunt) {
       options: {
         flags: [
           '--strict',
-          '--custom_jsdoc_tags namespace,name'
+          '--custom_jsdoc_tags namespace,name',
+          '--exclude_files genspecdeps.all.autogen.js'
         ],
         reporter: {
           name: 'console'
