@@ -54,7 +54,11 @@ module.exports = function(grunt) {
     protobuf: {
       options: {
         protoCompiler: '/usr/bin/protoc',
-        protobufPluginClosure: '/usr/local/src/protobuf-plugin-closure'
+        protobufPluginClosure: '/usr/local/src/protobuf-plugin-closure',
+        include: [
+          '/usr/local/src/protobuf-plugin-closure',
+          '/usr/local/src/protobuf-2.5.0/src'
+        ]
       },
       build: {
         src: 'protocol/**/*.proto',

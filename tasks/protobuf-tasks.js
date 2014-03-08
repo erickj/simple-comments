@@ -63,9 +63,12 @@ var buildTask = function(grunt, var_args) {
       grunt.config.get('protobuf.options.protobufPluginClosure');
   var cmdBase = [
     protoCompiler,
-    '--plugin=' + protobufPluginClosure + '/protobuf/protoc-gen-js',
-    '-I ' + protobufPluginClosure
+    '--plugin=' + protobufPluginClosure + '/protobuf/protoc-gen-js'
   ];
+  var includes = grunt.config.get('protobuf.options.include');
+  includes.forEach(function(include) {
+    cmdBase.push('-I', include);
+  });
   var protoPaths = {};
 
   // Run the protoc cmd for each set of src/dest files
