@@ -4,6 +4,7 @@ goog.require('logos.command.AddCommentCommand');
 goog.require('logos.command.AddConversationCommand');
 goog.require('logos.command.AddThreadCommand');
 goog.require('logos.command.AddUserCommand');
+goog.require('logos.command.CommandSet');
 goog.require('logos.command.NoopCommand');
 goog.require('logos.model.Comment');
 goog.require('logos.model.Conversation');
@@ -64,10 +65,17 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
     beforeEach(function() {
       protoCommandSet = new logos.protocol.messages.CommandSet();
+      protoCommandSet.setModelVersion(123);
+    });
+
+    it('deserializes the model version', function() {
+      var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
+      expect(commandSet.getModelVersion()).toBe(123);
     });
 
     it('deserializes an empty command set into an empty array', function() {
-      expect(deserializer.deserializeCommandSet(protoCommandSet)).toEqual([]);
+      var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
+      expect(commandSet.getCommands()).toEqual([]);
     });
 
     describe('multiple commands', function() {
@@ -89,9 +97,10 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes in order', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(2);
-        expect(commandSet[0]).toEqual(jasmine.any(logos.command.NoopCommand));
-        expect(commandSet[1]).toEqual(
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(2);
+        expect(commands[0]).toEqual(jasmine.any(logos.command.NoopCommand));
+        expect(commands[1]).toEqual(
             jasmine.any(logos.command.AddConversationCommand));
       });
     });
@@ -104,8 +113,9 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(1);
-        expect(commandSet[0]).toEqual(new logos.command.NoopCommand());
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(1);
+        expect(commands[0]).toEqual(new logos.command.NoopCommand());
       });
     });
 
@@ -123,8 +133,9 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(1);
-        expect(commandSet[0]).toEqual(
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(1);
+        expect(commands[0]).toEqual(
             new logos.command.AddConversationCommand(
                 new logos.model.Conversation('convo-id')));
       });
@@ -148,8 +159,9 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(1);
-        expect(commandSet[0]).toEqual(new logos.command.AddThreadCommand(
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(1);
+        expect(commands[0]).toEqual(new logos.command.AddThreadCommand(
             'convo-id',
             new logos.model.Thread(
                 'thread-id', logos.model.Thread.Topic.MAIN)));
@@ -175,8 +187,9 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(1);
-        expect(commandSet[0]).toEqual(new logos.command.AddCommentCommand(
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(1);
+        expect(commands[0]).toEqual(new logos.command.AddCommentCommand(
             'convo-id', 'thread-id', new logos.model.Comment(
                 'comment-id', 'body body body', 123456, 'a-user-id')));
       });
@@ -198,8 +211,9 @@ describe('logos.protocol.MessagesDeserializer', function() {
 
       it('deserializes', function() {
         var commandSet = deserializer.deserializeCommandSet(protoCommandSet);
-        expect(commandSet.length).toBe(1);
-        expect(commandSet[0]).toEqual(new logos.command.AddUserCommand(
+        var commands = commandSet.getCommands();
+        expect(commands.length).toBe(1);
+        expect(commands[0]).toEqual(new logos.command.AddUserCommand(
             new logos.model.User('user-id', 'erick@j.com', 'Erick J')));
       });
     });

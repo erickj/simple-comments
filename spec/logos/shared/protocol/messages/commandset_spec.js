@@ -42,6 +42,19 @@ describe('logos.protocol.messages.CommandSet', function() {
         expect(message.hasCommand()).toBe(false);
       });
     });
+
+    describe('model_version', function() {
+      it('#add*, #get*, #has*', function() {
+        expect(message.hasModelVersion()).toBe(false);
+        expect(message.getModelVersion()).toBe(null);
+        expect(message.getModelVersionOrDefault()).toBe(0);
+
+        message.setModelVersion(987);
+        expect(message.hasModelVersion()).toBe(true);
+        expect(message.getModelVersion()).toBe(987);
+        expect(message.getModelVersionOrDefault()).toBe(987);
+      });
+    });
   });
 
   describe('serialization', function() {
@@ -56,7 +69,8 @@ describe('logos.protocol.messages.CommandSet', function() {
       serializedMessage = {
         '1': [
           { '1': 2, '2': {}}
-        ]
+        ],
+        '2': 456
       };
     });
 
@@ -70,6 +84,7 @@ describe('logos.protocol.messages.CommandSet', function() {
           jasmine.any(logos.protocol.messages.Command));
       expect(command.getNoopCommand()).toEqual(
           jasmine.any(logos.protocol.messages.Command.NoopCommand));
+      expect(message.getModelVersion()).toBe(456);
     });
 
     it('serializes to JSON', function() {
@@ -78,6 +93,7 @@ describe('logos.protocol.messages.CommandSet', function() {
       command.setType(logos.protocol.messages.Command.Type.NOOP);
       command.setNoopCommand(new logos.protocol.messages.Command.NoopCommand());
       message.addCommand(command);
+      message.setModelVersion(456);
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });
   });

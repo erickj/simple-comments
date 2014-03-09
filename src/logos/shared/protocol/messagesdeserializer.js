@@ -4,6 +4,7 @@ goog.require('logos.command.AddCommentCommand');
 goog.require('logos.command.AddConversationCommand');
 goog.require('logos.command.AddThreadCommand');
 goog.require('logos.command.Command');
+goog.require('logos.command.CommandSet');
 goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions');
 goog.require('logos.model.Comment');
@@ -37,7 +38,7 @@ logos.protocol.MessagesDeserializer = function() {};
 
 /**
  * @param {!logos.protocol.messages.CommandSet} protoCommandSet
- * @return {!Array.<!logos.command.Command>}
+ * @return {!logos.command.CommandSet}
  */
 logos.protocol.MessagesDeserializer.prototype.deserializeCommandSet =
     function(protoCommandSet) {
@@ -46,7 +47,10 @@ logos.protocol.MessagesDeserializer.prototype.deserializeCommandSet =
   for (var i = 0, l = protoCommands.length; i < l; i++) {
     commands.push(this.deserializeCommand_(protoCommands[i]));
   }
-  return commands;
+  var modelVersion = /** @type {number} */ (logos.common.preconditions.
+      checkNotNull(protoCommandSet.getModelVersion()));
+
+  return new logos.command.CommandSet(commands, modelVersion);
 };
 
 

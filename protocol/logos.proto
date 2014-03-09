@@ -4,6 +4,7 @@ package logos.protocol.messages;
 
 message CommandSet {
   repeated Command command = 1;
+  optional int32 model_version = 2;
 }
 
 /**
