@@ -11,9 +11,10 @@ logos.command.Command = function() {};
 /** @enum {string} */
 logos.command.Command.Type = {
   NOOP: 'noop',
-  ADD_CONVERSATION: 'addconversation',
-  ADD_THREAD: 'addthread',
-  ADD_COMMENT: 'addcomment'
+  ADD_CONVERSATION: 'add_conversation',
+  ADD_THREAD: 'add_thread',
+  ADD_COMMENT: 'add_comment',
+  ADD_USER: 'add_user'
 };
 
 
