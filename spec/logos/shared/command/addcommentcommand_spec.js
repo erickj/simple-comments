@@ -5,9 +5,9 @@ goog.require('logos.command.CommandContext');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Comment');
 goog.require('logos.model.Conversation');
+goog.require('logos.model.Model');
 goog.require('logos.model.Thread');
 goog.require('logos.model.User');
-goog.require('logos.model.Model');
 
 describe('logos.command.AddCommentCommand', function() {
   var comment;
@@ -18,8 +18,9 @@ describe('logos.command.AddCommentCommand', function() {
   var user;
 
   beforeEach(function() {
-    user = new logos.model.User('user-id', 'erick@j.com', 'Erick J')
-    comment = new logos.model.Comment('comment-id', 'body body', 123, 'user-id');
+    user = new logos.model.User('user-id', 'erick@j.com', 'Erick J');
+    comment =
+        new logos.model.Comment('comment-id', 'body body', 123, 'user-id');
     thread = new logos.model.Thread('thread-id', logos.model.Thread.Topic.MAIN);
     conversation = new logos.model.Conversation('convo-id');
     model = new logos.model.Model();

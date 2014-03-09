@@ -2,7 +2,6 @@ goog.provide('spec.logos.model.CommentSpec');
 
 goog.require('logos.model.Comment');
 goog.require('logos.model.Object');
-goog.require('logos.model.Comment');
 
 describe('logos.model.Comment', function() {
   describe('#getId', function() {

@@ -1,8 +1,8 @@
 goog.provide('spec.logos.model.ThreadSpec');
 
-goog.require('logos.model.Thread');
-goog.require('logos.model.Object');
 goog.require('logos.model.Comment');
+goog.require('logos.model.Object');
+goog.require('logos.model.Thread');
 
 describe('logos.model.Thread', function() {
   var comment;

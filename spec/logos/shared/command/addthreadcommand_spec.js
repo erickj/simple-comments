@@ -4,8 +4,8 @@ goog.require('logos.command.AddThreadCommand');
 goog.require('logos.command.CommandContext');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Conversation');
-goog.require('logos.model.Thread');
 goog.require('logos.model.Model');
+goog.require('logos.model.Thread');
 
 describe('logos.command.AddThreadCommand', function() {
   var thread;

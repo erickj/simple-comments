@@ -3,8 +3,8 @@ goog.provide('spec.logos.command.AddUserCommandSpec');
 goog.require('logos.command.AddUserCommand');
 goog.require('logos.command.CommandContext');
 goog.require('logos.common.preconditions.IllegalStateException');
-goog.require('logos.model.User');
 goog.require('logos.model.Model');
+goog.require('logos.model.User');
 
 describe('logos.command.AddUserCommand', function() {
   var user;

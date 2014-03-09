@@ -57,7 +57,6 @@ logos.model.Thread.prototype.hasComment = function(id) {
 };
 
 
-
 /**
  * @return {!Array.<!logos.model.Comment>} All threads in the conversation.
  */

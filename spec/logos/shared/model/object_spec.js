@@ -12,12 +12,12 @@ describe('logos.model.Object', function() {
   describe('#getType', function() {
     it('returns the type', function() {
       expect(comment.getType()).toBe('comment');
-    })
+    });
   });
 
   describe('#getId', function() {
     it('returns the id', function() {
       expect(comment.getId()).toBe('an-id');
-    })
+    });
   });
 });
