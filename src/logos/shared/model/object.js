@@ -21,7 +21,8 @@ logos.model.Object = function(id, type) {
 logos.model.Object.Type = {
   COMMENT: 'comment',
   CONVERSATION: 'conversation',
-  THREAD: 'thread'
+  THREAD: 'thread',
+  USER: 'user'
 };
 
 

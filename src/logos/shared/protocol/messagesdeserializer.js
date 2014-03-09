@@ -194,13 +194,11 @@ logos.protocol.MessagesDeserializer.prototype.deserializeComment =
       protoComment.getBody(), 'Body is null');
   var timestamp = logos.common.preconditions.checkNotNull(
       protoComment.getModifiedTimestamp(), 'Modified timestamp is null');
-  var author = this.deserializeUser(
-      /** @type {!logos.protocol.messages.User } */ (
-          logos.common.preconditions.checkNotNull(
-              protoComment.getAuthor(), 'Author is null')));
+  var userId = logos.common.preconditions.checkNotNull(
+      protoComment.getUserId(), 'User id is null');
   return new logos.model.Comment(
       /** @type {string} */ (id), /** @type {string} */ (body),
-      /** @type {number} */ (timestamp), author);
+      /** @type {number} */ (timestamp), /** @type {string} */ (userId));
 };
 
 
@@ -210,7 +208,12 @@ logos.protocol.MessagesDeserializer.prototype.deserializeComment =
  */
 logos.protocol.MessagesDeserializer.prototype.deserializeUser =
     function(protoUser) {
+  var id = logos.common.preconditions.checkNotNull(
+      protoUser.getId(), 'User id is null');
   var email = logos.common.preconditions.checkNotNull(
       protoUser.getEmail(), 'Email is null');
-  return new logos.model.User(/** @type {string} */ (email));
+  var handle = logos.common.preconditions.checkNotNull(
+      protoUser.getHandle(), 'Handle is null');
+  return new logos.model.User(/** @type {string} */ (id),
+      /** @type {string} */ (email), /** @type {string} */ (handle));
 };

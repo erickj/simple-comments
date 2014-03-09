@@ -26,12 +26,14 @@ message Command {
     ADD_CONVERSATION = 3;
     ADD_THREAD = 4;
     ADD_COMMENT = 5;
+    ADD_USER = 6;
   }
 
   optional NoopCommand noop_command = 2;
   optional AddConversationCommand add_conversation_command = 3;
   optional AddThreadCommand add_thread_command = 4;
   optional AddCommentCommand add_comment_command = 5;
+  optional AddUserCommand add_user_command = 6;
 
   message NoopCommand {}
 
@@ -48,6 +50,10 @@ message Command {
     optional Comment comment = 1;
     optional string conversation_id = 2;
     optional string thread_id = 3;
+  }
+
+  message AddUserCommand {
+    optional User user = 1;
   }
 }
 
@@ -66,7 +72,7 @@ message Comment {
   optional string id = 1;
   optional string body = 2;
   optional int32 modified_timestamp = 3;
-  optional User author = 4;
+  optional string user_id = 4;
 }
 
 message Topic {
@@ -80,5 +86,7 @@ message Topic {
 }
 
 message User {
-  optional string email = 1 [default = "anonymous.coward@example.com"];
+  optional string id = 1;
+  optional string email = 2;
+  optional string handle = 3;
 }

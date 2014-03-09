@@ -58,18 +58,15 @@ describe('logos.protocol.messages.Comment', function() {
       });
     });
 
-    describe('author', function() {
+    describe('user_id', function() {
       it('#set*, #get*, #has*', function() {
-        expect(message.hasAuthor()).toBe(false);
-        expect(message.getAuthor()).toBe(null);
-        expect(message.getAuthorOrDefault()).toEqual(
-            new logos.protocol.messages.User());
+        expect(message.hasUserId()).toBe(false);
+        expect(message.getUserId()).toBe(null);
+        expect(message.getUserIdOrDefault()).toBe('');
 
-        var author = new logos.protocol.messages.User();
-        author.setEmail('erick@j.net');
-        message.setAuthor(author);
-        expect(message.hasAuthor()).toBe(true);
-        expect(message.getAuthor()).toEqual(author);
+        message.setUserId('user-abc');
+        expect(message.hasUserId()).toBe(true);
+        expect(message.getUserId()).toEqual('user-abc');
       });
     });
   });
@@ -86,9 +83,7 @@ describe('logos.protocol.messages.Comment', function() {
         '1': 'xyz123',
         '2': 'body body body',
         '3': 10987654321,
-        '4': {
-          '1': 'foo@bar.com'
-        }
+        '4': 'user-id'
       };
     });
 
@@ -98,10 +93,7 @@ describe('logos.protocol.messages.Comment', function() {
       expect(message.getId()).toBe('xyz123');
       expect(message.getBody()).toBe('body body body');
       expect(message.getModifiedTimestamp()).toBe(10987654321);
-
-      var expectedAuthor = new logos.protocol.messages.User();
-      expectedAuthor.setEmail('foo@bar.com');
-      expect(message.getAuthor()).toEqual(expectedAuthor);
+      expect(message.getUserId()).toEqual('user-id');
     });
 
     it('serializes to JSON', function() {
@@ -109,10 +101,7 @@ describe('logos.protocol.messages.Comment', function() {
       message.setId('xyz123');
       message.setBody('body body body');
       message.setModifiedTimestamp(10987654321);
-
-      var author = new logos.protocol.messages.User();
-      author.setEmail('foo@bar.com');
-      message.setAuthor(author);
+      message.setUserId('user-id');
       expect(serializer.serialize(message)).toEqual(serializedMessage);
     });
   });

@@ -39,6 +39,15 @@ logos.model.Conversation.prototype.getThread = function(id) {
 
 
 /**
+ * @param {string} id
+ * @return {boolean}
+ */
+logos.model.Conversation.prototype.hasThread = function(id) {
+  return this.threadContainer_.hasObjectWithId(id);
+};
+
+
+/**
  * @return {!Array.<!logos.model.Thread>} All threads in the conversation.
  */
 logos.model.Conversation.prototype.getThreads = function() {

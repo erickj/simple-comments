@@ -49,6 +49,16 @@ logos.model.Thread.prototype.getComment = function(id) {
 
 
 /**
+ * @param {string} id
+ * @return {boolean}
+ */
+logos.model.Thread.prototype.hasComment = function(id) {
+  return this.commentContainer_.hasObjectWithId(id);
+};
+
+
+
+/**
  * @return {!Array.<!logos.model.Comment>} All threads in the conversation.
  */
 logos.model.Thread.prototype.getComments = function() {
