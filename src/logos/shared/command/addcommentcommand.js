@@ -36,7 +36,7 @@ goog.inherits(logos.command.AddCommentCommand, logos.command.AbstractCommand);
 logos.command.AddCommentCommand.prototype.canApply = function(context) {
   var checkState = logos.common.preconditions.checkState;
   var model = context.getModel();
-//  checkState(model.hasUser(this.comment_.getUserId()), 'missing user');
+  checkState(model.hasUser(this.comment_.getUserId()), 'missing user');
   checkState(
       model.hasConversation(this.conversationId_), 'missing conversation');
 
