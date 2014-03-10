@@ -44,3 +44,12 @@ logos.command.AddThreadCommand.prototype.applyInternal = function(context) {
   var conversation = context.getModel().getConversation(this.conversationId_);
   conversation.addThread(this.thread_);
 };
+
+
+/** @override */
+logos.command.AddThreadCommand.prototype.transform = function(againstCommand) {
+  if (againstCommand.getType() != this.getType()) {
+    return this;
+  }
+  return this.equals(againstCommand) ? new logos.command.NoopCommand() : this;
+};

@@ -1,9 +1,12 @@
 goog.provide('logos.command.Command');
 
+goog.require('logos.common.EqualsComparable');
+
 
 
 /**
  * @interface
+ * @extends {logos.common.EqualsComparable}
  */
 logos.command.Command = function() {};
 
@@ -42,3 +45,12 @@ logos.command.Command.prototype.apply = goog.abstractMethod;
  * @throws {logos.common.preconditions.IllegalStateException}
  */
 logos.command.Command.prototype.canApply = goog.abstractMethod;
+
+
+/**
+ * Transforms this command against the given command. The given command to
+ * transform against has already been applied to the model, so only this command
+ * should be transformed.
+ * @param {!logos.command.Command} againstCommand
+ */
+logos.command.Command.prototype.transform = goog.abstractMethod;

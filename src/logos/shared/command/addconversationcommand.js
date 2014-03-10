@@ -2,6 +2,7 @@ goog.provide('logos.command.AddConversationCommand');
 
 goog.require('logos.command.AbstractCommand');
 goog.require('logos.command.Command');
+goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions');
 
 
@@ -38,4 +39,24 @@ logos.command.AddConversationCommand.prototype.canApply = function(context) {
 logos.command.AddConversationCommand.prototype.applyInternal =
     function(context) {
   context.getModel().addConversation(this.conversation_);
+};
+
+
+/** @override */
+logos.command.AddConversationCommand.prototype.transform =
+    function(againstCommand) {
+  if (againstCommand.getType() != this.getType()) {
+    return this;
+  }
+  return this.equals(againstCommand) ? new logos.command.NoopCommand() : this;
+};
+
+
+/** @override */
+logos.command.AddConversationCommand.prototype.equals = function(other) {
+  if (goog.base(this, 'equals', other)) {
+    return this.conversation_.equals(/** @type {
+        !logos.command.AddConversationCommand} */ (other).conversation_);
+  }
+  return false;
 };

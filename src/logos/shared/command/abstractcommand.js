@@ -38,3 +38,16 @@ logos.command.AbstractCommand.prototype.apply = function(commandContext) {
  * @protected
  */
 logos.command.AbstractCommand.prototype.applyInternal = goog.abstractMethod;
+
+
+/** @override */
+logos.command.AbstractCommand.prototype.transform = function(againstCommand) {
+  return this;
+};
+
+
+/** @override */
+logos.command.AbstractCommand.prototype.equals = function(other) {
+  return (other instanceof logos.command.AbstractCommand) &&
+      other.getType() == this.type_;
+};

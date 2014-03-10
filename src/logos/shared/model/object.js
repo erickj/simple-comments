@@ -1,5 +1,7 @@
 goog.provide('logos.model.Object');
 
+goog.require('logos.common.EqualsComparable');
+
 
 
 /**
@@ -7,6 +9,7 @@ goog.provide('logos.model.Object');
  * @param {logos.model.Object.Type} type
  * @constructor
  * @struct
+ * @implements {logos.common.EqualsComparable}
  */
 logos.model.Object = function(id, type) {
   /** @private {string} */
@@ -35,4 +38,12 @@ logos.model.Object.prototype.getId = function() {
 /** @return {logos.model.Object.Type} */
 logos.model.Object.prototype.getType = function() {
   return this.type_;
+};
+
+
+/** @override */
+logos.model.Object.prototype.equals = function(other) {
+  return (other instanceof logos.model.Object) &&
+      other.getId() == this.id_ &&
+      other.getType() == this.type_;
 };
