@@ -4,6 +4,10 @@ package logos.protocol.messages;
 
 message CommandSet {
   repeated Command command = 1;
+
+  // A value indicating the model version that this CommandSet applies
+  // against. The value increases monatomically for each Command applied against
+  // the model.
   optional int32 model_version = 2;
 }
 

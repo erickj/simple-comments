@@ -6,6 +6,7 @@ goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Conversation');
 goog.require('logos.model.Model');
 goog.require('logos.model.Thread');
+goog.require('logos.model.VersionProvider');
 
 describe('logos.command.AddThreadCommand', function() {
   var thread;
@@ -16,7 +17,7 @@ describe('logos.command.AddThreadCommand', function() {
   beforeEach(function() {
     thread = new logos.model.Thread('thread-id', logos.model.Thread.Topic.MAIN);
     conversation = new logos.model.Conversation('convo-id');
-    model = new logos.model.Model();
+    model = new logos.model.Model(new logos.model.VersionProvider());
     commandContext = new logos.command.CommandContext(model);
   });
 

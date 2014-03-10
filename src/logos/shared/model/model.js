@@ -2,15 +2,18 @@ goog.provide('logos.model.Model');
 
 goog.require('logos.model.Object');
 goog.require('logos.model.ObjectContainer');
+goog.require('logos.model.VersionProvider');
 
 
 
 /**
+ * @param {!logos.model.VersionProvider} versionProvider A provider
+ *     for the model version.
  * @constructor
  * @struct
  * @final
  */
-logos.model.Model = function() {
+logos.model.Model = function(versionProvider) {
   /** @private {!logos.model.ObjectContainer.<!logos.model.Conversation>} */
   this.conversationContainer_ = new logos.model.ObjectContainer(
       [logos.model.Object.Type.CONVERSATION]);
@@ -18,6 +21,20 @@ logos.model.Model = function() {
   /** @private {!logos.model.ObjectContainer.<!logos.model.User>} */
   this.userContainer_ = new logos.model.ObjectContainer(
       [logos.model.Object.Type.USER]);
+
+  /**
+   * The version provider is used to keep the version read-only on the model,
+   * while still allowing it to be updated from outside of the model and its
+   * accessors.
+   * @private {!logos.model.VersionProvider}
+   */
+  this.versionProvider_ = versionProvider;
+};
+
+
+/** @return {number} */
+logos.model.Model.prototype.getVersion = function() {
+  return this.versionProvider_.getVersion();
 };
 
 

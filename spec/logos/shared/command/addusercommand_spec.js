@@ -5,6 +5,7 @@ goog.require('logos.command.CommandContext');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Model');
 goog.require('logos.model.User');
+goog.require('logos.model.VersionProvider');
 
 describe('logos.command.AddUserCommand', function() {
   var user;
@@ -13,7 +14,7 @@ describe('logos.command.AddUserCommand', function() {
 
   beforeEach(function() {
     user = new logos.model.User('user-id', 'erick@j.com', 'Erick J');
-    model = new logos.model.Model();
+    model = new logos.model.Model(new logos.model.VersionProvider());
     commandContext = new logos.command.CommandContext(model);
   });
 
