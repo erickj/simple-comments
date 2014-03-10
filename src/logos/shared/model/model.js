@@ -1,6 +1,5 @@
 goog.provide('logos.model.Model');
 
-goog.require('logos.model.Object');
 goog.require('logos.model.ObjectContainer');
 goog.require('logos.model.VersionProvider');
 
