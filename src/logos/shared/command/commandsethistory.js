@@ -1,6 +1,6 @@
 goog.provide('logos.command.CommandSetHistory');
 
-goog.require('logos.common.precondtions');
+goog.require('logos.common.preconditions');
 
 
 /**
@@ -21,7 +21,7 @@ logos.command.CommandSetHistory = function() {
  */
 logos.command.CommandSetHistory.prototype.addCommandSetToHistory =
     function(version, commandSet) {
-  logos.common.precondtions.checkState(
+  logos.common.preconditions.checkState(
       version == this.commandSetHistory_.length);
   this.commandSetHistory_[version] = commandSet;
 };

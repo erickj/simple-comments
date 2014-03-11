@@ -75,7 +75,7 @@ logos.command.CommandApplier.prototype.maybeApplyCommandSet =
 
   this.commandSetHistory_.
       addCommandSetToHistory(currentModelVersion, commandSet);
-  this.incrementModelVersion_();
+  this.modelVersionProvider_.incrementVersion();
 
   return true;
 };
@@ -120,15 +120,6 @@ logos.command.CommandApplier.protoytpe.transformCommandSet_ =
 /** @return {number} The current model version. */
 logos.command.CommandApplier.prototype.getCurrentModelVersion_ = function() {
   this.modelVersionProvider_.getVersion()
-};
-
-
-/**
- * Increments the model version by 1 to reflect a CommandSet has been processed.
- * @private
- */
-logos.command.CommandApplier.prototype.incrementModelVersion_ = function() {
-  this.modelVersionProvider_.setVersion(++this.getCurrentModelVersion_());
 };
 
 

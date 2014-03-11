@@ -69,5 +69,5 @@ logos.command.CommandSet.prototype.transform = function(transformAgainst) {
   };
 
   return new logos.command.CommandSet(
-      transformedCommands, ++transformAgainst.getModelVersion());
+      transformedCommands, transformAgainst.getModelVersion() + 1);
 };
