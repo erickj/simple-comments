@@ -23,8 +23,8 @@ describe('logos.model.Model', function() {
     it('gets the version from the version provider', function() {
       expect(model.getVersion()).toBe(0);
 
-      versionProvider.setVersion(123987);
-      expect(model.getVersion()).toBe(123987);
+      versionProvider.incrementVersion();
+      expect(model.getVersion()).toBe(1);
     });
   });
 

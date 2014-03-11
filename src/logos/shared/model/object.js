@@ -41,9 +41,25 @@ logos.model.Object.prototype.getType = function() {
 };
 
 
-/** @override */
+/**
+ * @override
+ * @final
+ */
 logos.model.Object.prototype.equals = function(other) {
-  return (other instanceof logos.model.Object) &&
+  return this === other || (other instanceof logos.model.Object) &&
+      other.constructor == this.constructor &&
       other.getId() == this.id_ &&
-      other.getType() == this.type_;
+      other.getType() == this.type_ &&
+      this.equalsInternal(other);
+};
+
+
+/**
+ * Method to be overriden by subclasses to check for internal equality.
+ * @param {!logos.model.Object} object
+ * @return {boolean}
+ * @protected
+ */
+logos.model.Object.prototype.equalsInternal = function(object) {
+  return true;
 };

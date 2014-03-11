@@ -53,3 +53,10 @@ logos.model.Conversation.prototype.hasThread = function(id) {
 logos.model.Conversation.prototype.getThreads = function() {
   return this.threadContainer_.getObjectsInOrder();
 };
+
+
+/** @override */
+logos.model.Conversation.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.model.Conversation} */ (other);
+  return this.threadContainer_.equals(other.threadContainer_);
+};

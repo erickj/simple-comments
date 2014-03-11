@@ -43,4 +43,26 @@ describe('logos.model.Comment', function() {
       expect(comment.getUserId()).toBe('a-user');
     });
   });
+
+  describe('#equals', function() {
+    it('is true for the same object', function() {
+      var comment = new logos.model.Comment(
+          'comment-id', 'text text text', 123456, 'a-user');
+      expect(comment.equals(comment)).toBe(true);
+    });
+
+    it('is true for similar objects', function() {
+      var comment1 = new logos.model.Comment(
+          'comment-id', 'text text text', 123456, 'a-user');
+      var comment2 = new logos.model.Comment(
+          'comment-id', 'text text text', 123456, 'a-user');
+      expect(comment1.equals(comment2)).toBe(true);
+    });
+
+    it('is false for dissimilar objects', function() {
+      var comment1 = new logos.model.Comment('x', 'y', 123456, 'z');
+      var comment2 = new logos.model.Comment('a', 'b', 123456, 'c');
+      expect(comment1.equals(comment2)).toBe(false);
+    });
+  });
 });

@@ -1,13 +1,20 @@
 goog.provide('logos.model.ObjectContainer');
 
+goog.require('goog.object');
+goog.require('logos.common.EqualsComparable');
+goog.require('logos.common.equals');
+goog.require('logos.common.preconditions');
 goog.require('logos.model.Object');
 
 
 
 /**
- * @param {!Array.<logos.model.Object.Type>} allowedTypes
+ * A class for storing instances of {@code logos.model.Object}.
+ * @param {!Array.<logos.model.Object.Type>} allowedTypes The types of objects
+ *     allowed in this container.
  * @constructor
  * @struct
+ * @implements {logos.common.EqualsComparable}
  * @template T
  */
 logos.model.ObjectContainer = function(allowedTypes) {
@@ -26,24 +33,22 @@ logos.model.ObjectContainer = function(allowedTypes) {
 
 
 /**
- * Adds an object to the container using its id as the key, throws an error if
- * an object already exists with the given id.
+ * Adds an object to the container using its id as the key.
  * @param {T} object
- * @throws Error
+ * @throws Error if the object is not a model Object, if the object is not of
+ *     the allowed type, or if an object already exists with the given id.
  */
 logos.model.ObjectContainer.prototype.addObject = function(object) {
-  if (!(object instanceof logos.model.Object)) {
-    throw Error('Cannot contain non model object');
-  }
+  logos.common.preconditions.checkArgument(
+      object instanceof logos.model.Object, 'Cannot contain non model object');
+
   object = /** @type {!logos.model.Object} */ (object);
-  if (!this.allowedTypeSet_[object.getType()]) {
-    throw Error('Cannot contain object of type ' + object.getType());
-  }
+  logos.common.preconditions.checkArgument(this.allowedTypeSet_[object.getType()],
+      'Cannot contain object of type ' + object.getType());
 
   var id = object.getId();
-  if (this.objectContainer_[id]) {
-    throw Error('Container contains object at key ' + id);
-  }
+  logos.common.preconditions.checkState(
+      !this.objectContainer_[id], 'Container contains object at key ' + id);
   this.idOrder_.push(id);
   this.objectContainer_[id] = object;
 };
@@ -64,9 +69,8 @@ logos.model.ObjectContainer.prototype.hasObjectWithId = function(id) {
  * @throws Error if there is no object at the given id.
  */
 logos.model.ObjectContainer.prototype.getObjectWithId = function(id) {
-  if (!this.hasObjectWithId(id)) {
-    throw Error('Missing object with id ' + id);
-  }
+  logos.common.preconditions.checkState(
+      this.hasObjectWithId(id), 'Missing object with id ' + id);
   return this.objectContainer_[id];
 };
 
@@ -81,4 +85,36 @@ logos.model.ObjectContainer.prototype.getObjectsInOrder = function() {
     orderedObjects.push(this.objectContainer_[id]);
   }
   return orderedObjects;
+};
+
+
+/** @override */
+logos.model.ObjectContainer.prototype.equals = function(other) {
+  if (this == other) {
+    return true;
+  } else if (other instanceof logos.model.ObjectContainer) {
+    other = /** @type {!logos.model.ObjectContainer} */ (other);
+    return logos.common.equals.objectsEqual(
+            this.allowedTypeSet_, other.allowedTypeSet_) &&
+        logos.common.equals.arraysEqual(
+            this.idOrder_, other.idOrder_) &&
+        logos.common.equals.objectsEqual(
+            this.objectContainer_, other.objectContainer_,
+            this.compareObjectContainerKey_, this /** opt_scope */);
+  }
+  return false;
+};
+
+
+/**
+ * Compares the value stored in the given containers at the key.
+ * @param {!Object.<T>} container1
+ * @param {!Object.<T>} container2
+ * @param {string} key
+ * @return {boolean}
+ */
+logos.model.ObjectContainer.prototype.compareObjectContainerKey_ =
+    function(container1, container2, key) {
+  return /** @type {!logos.model.Object } */ (container1[key]).
+      equals(container2[key]);
 };

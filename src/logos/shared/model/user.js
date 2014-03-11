@@ -39,3 +39,11 @@ logos.model.User.prototype.getEmail = function() {
 logos.model.User.prototype.getHandle = function() {
   return this.handle_;
 };
+
+
+/** @override */
+logos.model.User.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.model.User} */ (other);
+  return this.email_ == other.email_ &&
+      this.handle_ == other.handle_;
+};

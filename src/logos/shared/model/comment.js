@@ -50,3 +50,12 @@ logos.model.Comment.prototype.getModifiedTimestamp = function() {
 logos.model.Comment.prototype.getUserId = function() {
   return this.userId_;
 };
+
+
+/** @override */
+logos.model.Comment.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.model.Comment} */ (other);
+  return this.modifiedTimestamp_ == other.modifiedTimestamp_ &&
+      this.userId_ == other.userId_ &&
+      this.body_ == other.body_;
+};

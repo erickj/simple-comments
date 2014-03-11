@@ -71,3 +71,11 @@ logos.model.Thread.prototype.getComments = function() {
 logos.model.Thread.prototype.getTopic = function() {
   return this.topic_;
 };
+
+
+/** @override */
+logos.model.Thread.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.model.Thread} */ (other);
+  return this.topic_ == other.topic_ &&
+      this.commentContainer_.equals(other.commentContainer_);
+};
