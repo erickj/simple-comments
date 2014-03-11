@@ -39,3 +39,10 @@ logos.command.AddUserCommand.prototype.applyInternal =
     function(context) {
   context.getModel().addUser(this.user_);
 };
+
+
+/** @override */
+logos.command.AddUserCommand.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.command.AddUserCommand} */ (other);
+  return this.user_.equals(other.user_);
+};

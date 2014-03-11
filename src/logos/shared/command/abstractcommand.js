@@ -1,6 +1,7 @@
 goog.provide('logos.command.AbstractCommand');
 
 goog.require('logos.command.Command');
+goog.require('logos.command.NoopCommand');
 
 
 
@@ -41,13 +42,27 @@ logos.command.AbstractCommand.prototype.applyInternal = goog.abstractMethod;
 
 
 /** @override */
-logos.command.AbstractCommand.prototype.transform = function(againstCommand) {
-  return this;
+logos.command.AbstractCommand.prototype.transform = function(otherCommand) {
+  return this.equals(otherCommand) ? logos.command.NoopCommand.INSTANCE : this;
 };
 
 
-/** @override */
+/**
+ * @override
+ * @final
+ */
 logos.command.AbstractCommand.prototype.equals = function(other) {
   return (other instanceof logos.command.AbstractCommand) &&
-      other.getType() == this.type_;
+      this.constructor == other.constructor &&
+      other.getType() == this.type_ &&
+      this.equalsInternal(other);
 };
+
+
+/**
+ * To be overriden by subclasses.
+ * @param {!logos.command.AbstractCommand} other
+ * @return {boolean}
+ * @protected
+ */
+logos.command.AbstractCommand.prototype.equalsInternal = goog.abstractMethod;

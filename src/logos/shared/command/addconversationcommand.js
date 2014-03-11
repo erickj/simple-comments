@@ -43,20 +43,8 @@ logos.command.AddConversationCommand.prototype.applyInternal =
 
 
 /** @override */
-logos.command.AddConversationCommand.prototype.transform =
-    function(againstCommand) {
-  if (againstCommand.getType() != this.getType()) {
-    return this;
-  }
-  return this.equals(againstCommand) ? new logos.command.NoopCommand() : this;
-};
-
-
-/** @override */
-logos.command.AddConversationCommand.prototype.equals = function(other) {
-  if (goog.base(this, 'equals', other)) {
-    return this.conversation_.equals(/** @type {
-        !logos.command.AddConversationCommand} */ (other).conversation_);
-  }
-  return false;
+logos.command.AddConversationCommand.prototype.equalsInternal =
+    function(other) {
+  return this.conversation_.equals(/** @type {
+      !logos.command.AddConversationCommand} */ (other).conversation_);
 };

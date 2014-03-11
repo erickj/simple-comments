@@ -2,6 +2,7 @@ goog.provide('spec.logos.command.AddCommentCommandSpec');
 
 goog.require('logos.command.AddCommentCommand');
 goog.require('logos.command.CommandContext');
+goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Comment');
 goog.require('logos.model.Conversation');
@@ -17,6 +18,7 @@ describe('logos.command.AddCommentCommand', function() {
   var commandContext;
   var model;
   var user;
+  var command;
 
   beforeEach(function() {
     user = new logos.model.User('user-id', 'erick@j.com', 'Erick J');
@@ -26,13 +28,13 @@ describe('logos.command.AddCommentCommand', function() {
     conversation = new logos.model.Conversation('convo-id');
     model = new logos.model.Model(new logos.model.VersionProvider());
     commandContext = new logos.command.CommandContext(model);
+    command = new logos.command.AddCommentCommand(
+        'convo-id', 'thread-id', comment);
   });
 
   describe('#canApply', function() {
     it('succeeds when there is no existing comment with the same id',
        function() {
-         var command = new logos.command.AddCommentCommand(
-             'convo-id', 'thread-id', comment);
          model.addUser(user);
          model.addConversation(conversation);
          conversation.addThread(thread);
@@ -40,8 +42,6 @@ describe('logos.command.AddCommentCommand', function() {
        });
 
     it('errors when a user doesn\'t exist', function() {
-      var command = new logos.command.AddCommentCommand(
-          'convo-id', 'thread-id', comment);
       model.addUser(user);
       model.addConversation(conversation);
       expect(function() {
@@ -50,8 +50,6 @@ describe('logos.command.AddCommentCommand', function() {
     });
 
     it('errors when a conversation doesn\'t exist', function() {
-      var command = new logos.command.AddCommentCommand(
-          'convo-id', 'thread-id', comment);
       model.addUser(user);
       expect(function() {
         command.canApply(commandContext);
@@ -59,8 +57,6 @@ describe('logos.command.AddCommentCommand', function() {
     });
 
     it('errors when a thread doesn\'t exist', function() {
-      var command = new logos.command.AddCommentCommand(
-          'convo-id', 'thread-id', comment);
       model.addUser(user);
       model.addConversation(conversation);
       expect(function() {
@@ -73,8 +69,6 @@ describe('logos.command.AddCommentCommand', function() {
       model.addConversation(conversation);
       conversation.addThread(thread);
       thread.addComment(comment);
-      var command = new logos.command.AddCommentCommand(
-          'convo-id', 'thread-id', comment);
       expect(function() {
         command.canApply(commandContext);
       }).toThrow(new logos.common.preconditions.IllegalStateException());
@@ -86,10 +80,37 @@ describe('logos.command.AddCommentCommand', function() {
       model.addConversation(conversation);
       conversation.addThread(thread);
       expect(thread.hasComment('comment-id')).toBe(false);
-      var command = new logos.command.AddCommentCommand(
-          'convo-id', 'thread-id', comment);
       command.apply(commandContext);
       expect(thread.hasComment('comment-id')).toBe(true);
+    });
+  });
+
+  describe('#transform', function() {
+    it('returns itself for any command it doesn\'t transform against',
+       function() {
+         expect(command.transform(logos.command.NoopCommand.INSTANCE)).
+             toBe(command);
+       });
+
+    it('returns a noop command when transforming against a command equal to itself',
+       function() {
+         expect(command.transform(command)).
+             toBe(logos.command.NoopCommand.INSTANCE);
+       });
+  });
+
+  describe('#equals', function() {
+    it('returns true for commands like itself', function() {
+      expect(command.equals(command)).toBe(true);
+      var similarCommand = new logos.command.AddCommentCommand(
+        'convo-id', 'thread-id', comment);
+      expect(command.equals(similarCommand)).toBe(true);
+    });
+
+    it('returns false for command unlike itself', function() {
+      var dissimilarCommand = new logos.command.AddCommentCommand(
+        'foo-id', 'foo-thread-id', comment);
+      expect(command.equals(dissimilarCommand)).toBe(false);
     });
   });
 });

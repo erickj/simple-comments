@@ -47,9 +47,11 @@ logos.command.AddThreadCommand.prototype.applyInternal = function(context) {
 
 
 /** @override */
-logos.command.AddThreadCommand.prototype.transform = function(againstCommand) {
-  if (againstCommand.getType() != this.getType()) {
-    return this;
+logos.command.AddThreadCommand.prototype.equalsInternal = function(other) {
+  if (other instanceof logos.command.AddThreadCommand) {
+    other = /** @type {!logos.command.AddThreadCommand} */ (other);
+    return other.conversationId_ == this.conversationId_ &&
+        other.thread_.equals(this.thread_)
   }
-  return this.equals(againstCommand) ? new logos.command.NoopCommand() : this;
+  return false;
 };

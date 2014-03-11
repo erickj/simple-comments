@@ -55,3 +55,12 @@ logos.command.AddCommentCommand.prototype.applyInternal = function(context) {
   var thread = conversation.getThread(this.threadId_);
   thread.addComment(this.comment_);
 };
+
+
+/** @override */
+logos.command.AddCommentCommand.prototype.equalsInternal = function(other) {
+  other = /** @type {!logos.command.AddCommentCommand} */ (other);
+  return this.conversationId_ == other.conversationId_ &&
+      this.threadId_ == other.threadId_ &&
+      this.comment_.equals(other.comment_);
+};
