@@ -5,8 +5,8 @@ goog.provide('logos.command.CommandSet');
 /**
  * A set of commands that will all be applied together to a single model
  * version.
- * @param {!Array.<!logos.command.Command>} commands
- * @param {number} modelVersion
+ * @param {!Array.<!logos.command.Command>} commands The list of commands.
+ * @param {number} modelVersion The model version at which this set was applied.
  * @constructor
  * @struct
  * @final
