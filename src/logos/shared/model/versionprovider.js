@@ -3,6 +3,7 @@ goog.provide('logos.model.VersionProvider');
 
 
 /**
+ * A class to provide the model version number and control incrementing it.
  * @constructor
  * @struct
  * @final
@@ -19,7 +20,9 @@ logos.model.VersionProvider.prototype.getVersion = function() {
 };
 
 
-/** @param {number} version */
-logos.model.VersionProvider.prototype.setVersion = function(version) {
-  this.version_ = version;
+/**
+ * Increases the version number by 1.
+ */
+logos.model.VersionProvider.prototype.incrementVersion = function() {
+  this.version_++;
 };
