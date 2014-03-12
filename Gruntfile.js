@@ -237,7 +237,7 @@ module.exports = function(grunt) {
   // this is because of how the closureBuilder task is dynamically built.
   /** Task to clean, concat, run, and compile specs. */
   grunt.registerTask('test-all', 'Runs specs for client and server targets ',
-      ['server-specs', 'client-specs']);
+      ['gjslint', 'server-specs', 'client-specs']);
 
   /** Task to clean, concat, run, and compile specs. */
   grunt.registerTask('test-fast', 'Runs specs for server targets ',
