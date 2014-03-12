@@ -1,7 +1,8 @@
-goog.provide('logos.command.CommandApplier');
-goog.provide('logos.command.CommandEvent');
+goog.provide('logos.command.CommandSetApplier');
+goog.provide('logos.command.CommandSetApplicationEvent');
 
 goog.require('goog.events');
+goog.require('goog.events.Event');
 goog.require('logos.command.Command');
 goog.require('logos.common.preconditions');
 goog.require('logos.common.preconditions.IllegalStateException');
@@ -9,6 +10,7 @@ goog.require('logos.common.preconditions.IllegalStateException');
 
 
 /**
+ * Applies CommandSets to the model.
  * @param {!logos.event.EventBus} eventBus
  * @param {!logos.command.CommandContext} commandContext
  * @param {!logos.command.CommandSetHistory} commandSetHistory
@@ -17,7 +19,7 @@ goog.require('logos.common.preconditions.IllegalStateException');
  * @struct
  * @final
  */
-logos.command.CommandApplier = function(
+logos.command.CommandSetApplier = function(
     eventBus, commandContext, commandSetHistory, modelVersionProvider) {
   /** @private {!logos.event.EventBus} */
   this.eventBus_ = eventBus;
@@ -34,48 +36,64 @@ logos.command.CommandApplier = function(
 
 
 /**
+ * Events dispatched when applying a command set.
+ * @enum {string}
+ */
+logos.command.CommandSetApplier.EventType = {
+  BEFORE_APPLY: goog.events.getUniqueId('before-apply-commandset'),
+  AFTER_APPLY: goog.events.getUniqueId('after-apply-commandset')
+};
+
+
+/**
  * Applies a CommandSet if it the whole command set can be applied. Dispatches
- * events before and after each command is applied.
+ * events before and after the commandset is applied. If any Command in the
+ * CommandSet returns false for {@code #canApply} then the CommandSet will not
+ * be applied.
  * @param {!logos.command.CommandSet} commandSet
  * @return {boolean} Whether the command was applied.
+ * @throws {Error} if the command set is at an invalid version or if
+ *     unable to apply a command.
  */
-logos.command.CommandApplier.prototype.maybeApplyCommandSet =
+logos.command.CommandSetApplier.prototype.maybeApplyCommandSet =
     function(commandSet) {
+  var commandSetModelVesion = commandSet.getModelVersion();
+  logos.common.preconditions.checkArgument(
+      commandSetModelVesion <= this.getCurrentModelVersion_(),
+      'Invalid CommandSet version ' + commandSetModelVesion);
+
   if (this.shouldTransformCommandSet_(commandSet)) {
     commandSet = this.transformCommandSet_(commandSet);
   }
 
   var commands = commandSet.getCommands();
-  var lastCommandType;
-  try {
-    for (var i = 0; i < commands.length; i++) {
-      lastCommandType = commands[i].getType();
+  for (var i = 0; i < commands.length; i++) {
+    try {
       if (!commands[i].canApply(this.commandContext_)) {
-        throw Error('cannot apply command');
+        return false;
       }
+    } catch (e) {
+      var message = 'Unable to apply command type ' + commands[i].getType();
+      message +=
+          (e instanceof logos.common.preconditions.IllegalStateException) ?
+              ' invalid model state: ' + e.message :
+              ' for unknown reason: ' + e.message;
+      throw Error(message);
     }
-  } catch (e) {
-    var message = 'Unable to apply command type ' + lastCommandType;
-    message += (e instanceof logos.common.preconditions.IllegalStateException) ?
-        ' invalid model state: ' + e.message :
-        ' for reason: ' + e.message;
   }
 
   var currentModelVersion = this.getCurrentModelVersion_();
-  for (var i = 0; i < commands.length; i++) {
-    var command = commands[i];
-    this.eventBus_.dispatchEvent(new logos.command.CommandEvent(
-        logos.command.CommandEventType.BEFORE_APPLY, command,
-        currentModelVersion));
-    command.apply(this.commandContext_);
-    this.eventBus_.dispatchEvent(new logos.command.CommandEvent(
-        logos.command.CommandEventType.AFTER_APPLY, command,
-        currentModelVersion));
-  }
+  this.eventBus_.dispatchEvent(new logos.command.CommandSetApplicationEvent(
+      logos.command.CommandSetApplier.EventType.BEFORE_APPLY, commandSet));
 
-  this.commandSetHistory_.
-      addCommandSetToHistory(currentModelVersion, commandSet);
+  for (var i = 0; i < commands.length; i++) {
+    commands[i].apply(this.commandContext_);
+  }
+  this.commandSetHistory_.addCommandSetToHistory(commandSet);
   this.modelVersionProvider_.incrementVersion();
+
+  this.eventBus_.dispatchEvent(new logos.command.CommandSetApplicationEvent(
+      logos.command.CommandSetApplier.EventType.AFTER_APPLY, commandSet));
 
   return true;
 };
@@ -91,12 +109,10 @@ logos.command.CommandApplier.prototype.maybeApplyCommandSet =
  *     version is ahead of the current model version.
  * @private
  */
-logos.command.CommandApplier.prototype.shouldTransformCommandSet_ =
+logos.command.CommandSetApplier.prototype.shouldTransformCommandSet_ =
     function(commandSet) {
-  var commandSetModelVesion = commandSet.getModelVersion();
-  logos.common.preconditions.checkState(
-      commandSetModelVesion <= this.getCurrentModelVersion_());
-  return this.commandSetHistory_.hasCommandsSinceVersion(commandSetModelVesion);
+  return this.commandSetHistory_.hasCommandsSinceVersion(
+      commandSet.getModelVersion());
 };
 
 
@@ -107,7 +123,7 @@ logos.command.CommandApplier.prototype.shouldTransformCommandSet_ =
  * @return {!logos.command.CommandSet} The transformed command set.
  * @private
  */
-logos.command.CommandApplier.prototype.transformCommandSet_ =
+logos.command.CommandSetApplier.prototype.transformCommandSet_ =
     function(commandSet) {
   var commandSetModelVesion = commandSet.getModelVersion();
   var transformSets = this.commandSetHistory_.getCommandsSinceVersion(
@@ -123,34 +139,22 @@ logos.command.CommandApplier.prototype.transformCommandSet_ =
  * @return {number} The current model version.
  * @private
  */
-logos.command.CommandApplier.prototype.getCurrentModelVersion_ = function() {
+logos.command.CommandSetApplier.prototype.getCurrentModelVersion_ = function() {
   return this.modelVersionProvider_.getVersion();
 };
 
 
 
 /**
- * @param {logos.command.CommandEvent.Type} eventType
- * @param {logos.command.Command} command
- * @param {number} modelVersion The version at which the common will be/was
- *     applied.
+ * @param {logos.command.CommandSetApplier.EventType} type
+ * @param {logos.command.CommandSet} commandSet
  * @constructor
- * @struct
+ * @extends {goog.events.Event}
  */
-logos.command.CommandEvent = function(eventType, command, modelVersion) {
-  /** @type {logos.command.CommandEvent.Type} */
-  this.eventType = eventType;
+logos.command.CommandSetApplicationEvent = function(type, commandSet) {
+  goog.events.Event.call(this, type);
 
-  /** @type {logos.command.Command} */
-  this.command = command;
-
-  /** @type {number} */
-  this.modelVersion = modelVersion;
+  /** @type {logos.command.CommandSet} */
+  this.commandSet = commandSet;
 };
-
-
-/** @enum {string} */
-logos.command.CommandEvent.Type = {
-  BEFORE_APPLY: goog.events.getUniqueId('before-apply-command'),
-  AFTER_APPLY: goog.events.getUniqueId('after-apply-command')
-};
+goog.inherits(logos.command.CommandSetApplicationEvent, goog.events.Event);
