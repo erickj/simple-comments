@@ -92,7 +92,8 @@ describe('logos.command.AddCommentCommand', function() {
              toBe(command);
        });
 
-    it('returns a noop command when transforming against a command equal to itself',
+    it('returns a noop command when transforming against a command equal to ' +
+       'itself',
        function() {
          expect(command.transform(command)).
              toBe(logos.command.NoopCommand.INSTANCE);
@@ -103,13 +104,13 @@ describe('logos.command.AddCommentCommand', function() {
     it('returns true for commands like itself', function() {
       expect(command.equals(command)).toBe(true);
       var similarCommand = new logos.command.AddCommentCommand(
-        'convo-id', 'thread-id', comment);
+          'convo-id', 'thread-id', comment);
       expect(command.equals(similarCommand)).toBe(true);
     });
 
     it('returns false for command unlike itself', function() {
       var dissimilarCommand = new logos.command.AddCommentCommand(
-        'foo-id', 'foo-thread-id', comment);
+          'foo-id', 'foo-thread-id', comment);
       expect(command.equals(dissimilarCommand)).toBe(false);
     });
   });

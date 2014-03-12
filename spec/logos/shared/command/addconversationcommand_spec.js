@@ -50,7 +50,8 @@ describe('logos.command.AddConversationCommand', function() {
              toBe(command);
        });
 
-    it('returns a noop command when transforming against a command equal to itself',
+    it('returns a noop command when transforming against a command equal to ' +
+       'itself',
        function() {
          expect(command.transform(command)).
              toBe(logos.command.NoopCommand.INSTANCE);

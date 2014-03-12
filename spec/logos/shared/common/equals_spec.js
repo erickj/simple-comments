@@ -53,7 +53,7 @@ describe('logos.common.equals', function() {
       var intParserComparatorFn = function(map1, map2, key) {
         var base = 10;
         return parseInt(map1[key], base) == parseInt(map2[key], base);
-      }
+      };
       expect(objectsEqual(obj1, obj2, intParserComparatorFn)).toBe(true);
       expect(objectsEqual(obj2, obj1, intParserComparatorFn)).toBe(true);
     });
@@ -89,7 +89,7 @@ describe('logos.common.equals', function() {
       var intParserComparatorFn = function(val1, val2) {
         var base = 10;
         return parseInt(val1, base) == parseInt(val2, base);
-      }
+      };
       expect(arraysEqual(arr, delegateArr, intParserComparatorFn)).toBe(true);
       expect(arraysEqual(delegateArr, arr, intParserComparatorFn)).toBe(true);
     });

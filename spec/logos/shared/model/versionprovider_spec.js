@@ -12,9 +12,9 @@ describe('logos.model.VersionProvider', function() {
   describe('#getVersion/#incrementVersion', function() {
     it('starts at 0 and increments by 1', function() {
       expect(versionProvider.getVersion()).toBe(0);
-      versionProvider.incrementVersion()
+      versionProvider.incrementVersion();
       expect(versionProvider.getVersion()).toBe(1);
-      versionProvider.incrementVersion()
+      versionProvider.incrementVersion();
       expect(versionProvider.getVersion()).toBe(2);
     });
   });

@@ -28,7 +28,7 @@ describe('logos.command.NoopCommand', function() {
   describe('#transform', function() {
     it('returns itself', function() {
       expect(noopCommand.transform(/** @type {!logos.command.Command} */ ({}))).
-        toBe(noopCommand);
+          toBe(noopCommand);
     });
   });
 

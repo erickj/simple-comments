@@ -51,7 +51,7 @@ logos.command.AddThreadCommand.prototype.equalsInternal = function(other) {
   if (other instanceof logos.command.AddThreadCommand) {
     other = /** @type {!logos.command.AddThreadCommand} */ (other);
     return other.conversationId_ == this.conversationId_ &&
-        other.thread_.equals(this.thread_)
+        other.thread_.equals(this.thread_);
   }
   return false;
 };

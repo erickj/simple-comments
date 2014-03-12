@@ -53,8 +53,8 @@ logos.command.CommandApplier.prototype.maybeApplyCommandSet =
       if (!commands[i].canApply(this.commandContext_)) {
         throw Error('cannot apply command');
       }
-    };
-  } catch(e) {
+    }
+  } catch (e) {
     var message = 'Unable to apply command type ' + lastCommandType;
     message += (e instanceof logos.common.preconditions.IllegalStateException) ?
         ' invalid model state: ' + e.message :
@@ -89,6 +89,7 @@ logos.command.CommandApplier.prototype.maybeApplyCommandSet =
  * @return {boolean} Whether this command set needs to be transformed.
  * @throws {logos.common.preconditions.IllegalStateException} If the command set
  *     version is ahead of the current model version.
+ * @private
  */
 logos.command.CommandApplier.prototype.shouldTransformCommandSet_ =
     function(commandSet) {
@@ -104,8 +105,9 @@ logos.command.CommandApplier.prototype.shouldTransformCommandSet_ =
  * version the command set is applied at.
  * @param {!logos.command.CommandSet} commandSet
  * @return {!logos.command.CommandSet} The transformed command set.
+ * @private
  */
-logos.command.CommandApplier.protoytpe.transformCommandSet_ =
+logos.command.CommandApplier.prototype.transformCommandSet_ =
     function(commandSet) {
   var commandSetModelVesion = commandSet.getModelVersion();
   var transformSets = this.commandSetHistory_.getCommandsSinceVersion(
@@ -117,9 +119,12 @@ logos.command.CommandApplier.protoytpe.transformCommandSet_ =
 };
 
 
-/** @return {number} The current model version. */
+/**
+ * @return {number} The current model version.
+ * @private
+ */
 logos.command.CommandApplier.prototype.getCurrentModelVersion_ = function() {
-  this.modelVersionProvider_.getVersion()
+  return this.modelVersionProvider_.getVersion();
 };
 
 

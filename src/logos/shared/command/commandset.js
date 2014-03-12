@@ -40,7 +40,8 @@ logos.command.CommandSet.prototype.getCommands = function() {
  * Transforms this command set against the given command set. The given command
  * set has already been applied to the model, so only this command set can be
  * transformed. This is O(n^2 + n*m) where n is the number of commands in this
- * set and m is the number in the {@code transformAgainst} set.
+ * set and m is the number in the {@code transformAgainst} set, but in practice
+ * m and n are likely to be very small, I think 5 would be high.
  * @param {!logos.command.CommandSet} transformAgainst
  * @return {!logos.command.CommandSet}
  */
@@ -66,7 +67,7 @@ logos.command.CommandSet.prototype.transform = function(transformAgainst) {
     }
 
     transformedCommands.push(thisCommand);
-  };
+  }
 
   return new logos.command.CommandSet(
       transformedCommands, transformAgainst.getModelVersion() + 1);

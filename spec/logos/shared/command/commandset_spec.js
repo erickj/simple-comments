@@ -71,7 +71,7 @@ describe('logos.command.CommandSet', function() {
         new TransformTrackingCommand(),
         new TransformTrackingCommand()
       ];
-      thisCommandSet =  new logos.command.CommandSet(thisCommandList, 3);
+      thisCommandSet = new logos.command.CommandSet(thisCommandList, 3);
     });
 
     it('skips transforming if other is empty', function() {

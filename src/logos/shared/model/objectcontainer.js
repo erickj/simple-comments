@@ -43,8 +43,8 @@ logos.model.ObjectContainer.prototype.addObject = function(object) {
       object instanceof logos.model.Object, 'Cannot contain non model object');
 
   object = /** @type {!logos.model.Object} */ (object);
-  logos.common.preconditions.checkArgument(this.allowedTypeSet_[object.getType()],
-      'Cannot contain object of type ' + object.getType());
+  logos.common.preconditions.checkArgument(this.allowedTypeSet_[
+      object.getType()], 'Cannot contain object of type ' + object.getType());
 
   var id = object.getId();
   logos.common.preconditions.checkState(
@@ -95,7 +95,7 @@ logos.model.ObjectContainer.prototype.equals = function(other) {
   } else if (other instanceof logos.model.ObjectContainer) {
     other = /** @type {!logos.model.ObjectContainer} */ (other);
     return logos.common.equals.objectsEqual(
-            this.allowedTypeSet_, other.allowedTypeSet_) &&
+        this.allowedTypeSet_, other.allowedTypeSet_) &&
         logos.common.equals.arraysEqual(
             this.idOrder_, other.idOrder_) &&
         logos.common.equals.objectsEqual(
@@ -112,6 +112,7 @@ logos.model.ObjectContainer.prototype.equals = function(other) {
  * @param {!Object.<T>} container2
  * @param {string} key
  * @return {boolean}
+ * @private
  */
 logos.model.ObjectContainer.prototype.compareObjectContainerKey_ =
     function(container1, container2, key) {

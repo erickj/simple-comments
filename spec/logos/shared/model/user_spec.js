@@ -45,7 +45,8 @@ describe('logos.model.User', function() {
     });
 
     it('returns false for dissimilar objects', function() {
-      var dissimilar = new logos.model.User('foo-user-id', 'foo@j.com', 'Foo J');
+      var dissimilar =
+          new logos.model.User('foo-user-id', 'foo@j.com', 'Foo J');
       expect(user.equals(dissimilar)).toBe(false);
     });
   });

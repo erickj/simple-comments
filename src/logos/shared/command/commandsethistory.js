@@ -3,6 +3,7 @@ goog.provide('logos.command.CommandSetHistory');
 goog.require('logos.common.preconditions');
 
 
+
 /**
  * @constructor
  * @struct
