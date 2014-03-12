@@ -51,7 +51,8 @@ describe('logos.command.CommandSetApplier', function() {
     it('adds the CommandSet to the history at the given version', function() {
       expect(commandSetHistory.getCommandsSinceVersion(0)).toEqual([]);
       commandSetApplier.maybeApplyCommandSet(commandSet);
-      expect(commandSetHistory.getCommandsSinceVersion(0)).toEqual([commandSet]);
+      expect(
+          commandSetHistory.getCommandsSinceVersion(0)).toEqual([commandSet]);
     });
 
     describe('validates CommandSet version', function() {
@@ -136,7 +137,7 @@ describe('logos.command.CommandSetApplier', function() {
         expect(modelVersionProvider.getVersion()).toBe(0);
         expect(commandSetHistory.hasCommandsSinceVersion(0)).toBe(false);
 
-        fakeCommand2.canApply = function() { return false; }
+        fakeCommand2.canApply = function() { return false; };
         expect(commandSetApplier.maybeApplyCommandSet(commandSet)).toBe(false);
 
         expect(commandSetHistory.hasCommandsSinceVersion(0)).toBe(false);

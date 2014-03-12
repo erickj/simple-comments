@@ -59,7 +59,7 @@ describe('logos.command.CommandSetHistory', function() {
   describe('#hasCommandsSinceVersion', function() {
     it('returns false if there are no commands since the given version',
        function() {
-         expect(commandSetHistory.hasCommandsSinceVersion(0)).toBe(false)
+         expect(commandSetHistory.hasCommandsSinceVersion(0)).toBe(false);
        });
 
     it('returns true if there are commands at or after the given version',

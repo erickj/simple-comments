@@ -1,5 +1,5 @@
-goog.provide('logos.command.CommandSetApplier');
 goog.provide('logos.command.CommandSetApplicationEvent');
+goog.provide('logos.command.CommandSetApplier');
 
 goog.require('goog.events');
 goog.require('goog.events.Event');
