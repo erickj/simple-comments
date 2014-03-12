@@ -116,6 +116,6 @@ logos.model.ObjectContainer.prototype.equals = function(other) {
  */
 logos.model.ObjectContainer.prototype.compareObjectContainerKey_ =
     function(container1, container2, key) {
-  return /** @type {!logos.model.Object } */ (container1[key]).
+  return /** @type {!logos.model.Object} */ (container1[key]).
       equals(container2[key]);
 };
