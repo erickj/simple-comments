@@ -3,6 +3,7 @@ goog.provide('spec.logos.command.CommandSetSpec');
 goog.require('logos.command.Command');
 goog.require('logos.command.CommandSet');
 goog.require('logos.command.NoopCommand');
+goog.require('spec.helpers.fake.FakeCommand');
 
 describe('logos.command.CommandSet', function() {
   var commandSet;
@@ -31,36 +32,7 @@ describe('logos.command.CommandSet', function() {
   });
 
   describe('#transform', function() {
-    /**
-     * A fake Command implementation to test transforms.
-     * @constructor
-     * @implements {logos.command.Command}
-     */
-    var TransformTrackingCommand = function() {
-      /** @type {!Array.<!logos.command.Command>} */
-      this.transformedAgainst = [];
-    };
-
-    /** @override */
-    TransformTrackingCommand.prototype.apply = function() {};
-
-    /** @override */
-    TransformTrackingCommand.prototype.canApply = function() {};
-
-    /** @override */
-    TransformTrackingCommand.prototype.getType = function() {
-      return logos.command.Command.Type.NOOP;
-    };
-
-    /** @override */
-    TransformTrackingCommand.prototype.equals = function() {};
-
-    /** @override */
-    TransformTrackingCommand.prototype.transform = function(other) {
-      this.transformedAgainst.push(other);
-      return this;
-    };
-
+    var FakeCommand = spec.helpers.fake.FakeCommand;
     var otherCommandSet;
     var thisCommandSet;
     var thisCommandList;
@@ -68,8 +40,8 @@ describe('logos.command.CommandSet', function() {
     beforeEach(function() {
       otherCommandSet = new logos.command.CommandSet(commandList, 0);
       thisCommandList = [
-        new TransformTrackingCommand(),
-        new TransformTrackingCommand()
+        new FakeCommand(),
+        new FakeCommand()
       ];
       thisCommandSet = new logos.command.CommandSet(thisCommandList, 3);
     });
