@@ -5,6 +5,8 @@ goog.require('logos.common.preconditions');
 
 
 /**
+ * A class to keep track of the history of CommandSets that have been applied to
+ * the model. Each command set is added at its model version.
  * @constructor
  * @struct
  * @final
@@ -17,25 +19,31 @@ logos.command.CommandSetHistory = function() {
 
 /**
  * Adds a command set to the history. Throws an error if the key already exists.
- * @param {number} version
  * @param {!logos.command.CommandSet} commandSet
+ * @throws {Error} if adding a CommandSet whose version number does not match
+ *     the current model version.
  */
 logos.command.CommandSetHistory.prototype.addCommandSetToHistory =
-    function(version, commandSet) {
-  logos.common.preconditions.checkState(
-      version == this.commandSetHistory_.length);
-  this.commandSetHistory_[version] = commandSet;
+    function(commandSet) {
+  var currentVersion = this.getVersion_();
+  logos.common.preconditions.checkArgument(
+      currentVersion == commandSet.getModelVersion(),
+      'History version out of sync with CommandSet version.');
+  this.commandSetHistory_[currentVersion] = commandSet;
 };
 
 
 /**
  * Returns the subset of command sets from the given version to the end of the
- * history. This subset is inclusive of the given version.
+ * history. This subset is inclusive of the given version. Returns an empty arry
+ * if {@code vesion} is at or ahead of the current version.
  * @param {number} version
  * @return {!Array.<!logos.command.CommandSet>}
  */
 logos.command.CommandSetHistory.prototype.getCommandsSinceVersion =
     function(version) {
+  logos.common.preconditions.checkArgument(
+      version >= 0, 'Invalid version ' + version);
   return this.commandSetHistory_.slice(version);
 };
 
@@ -47,5 +55,16 @@ logos.command.CommandSetHistory.prototype.getCommandsSinceVersion =
  */
 logos.command.CommandSetHistory.prototype.hasCommandsSinceVersion =
     function(version) {
-  return this.getCommandsSinceVersion(version).length > 0;
+  logos.common.preconditions.checkArgument(
+      version >= 0, 'Invalid version ' + version);
+  return !!this.commandSetHistory_[version];
+};
+
+
+/**
+ * @return {number}
+ * @private
+ */
+logos.command.CommandSetHistory.prototype.getVersion_ = function() {
+  return this.commandSetHistory_.length;
 };
