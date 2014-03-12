@@ -14,9 +14,9 @@
     "grunt-jasmine-node": "~0.1.0"
   },
   "scripts": {
-    "doc": "jsdoc -d=doc src/closure-library/closure/goog/*"
+    "doc": "jsdoc -d=doc src/closure-library/closure/goog/*",
     "preinstall": "grunt init",
-    "test": "grunt"
+    "test": "grunt test-all"
   },
   "repository": {
     "type": "git",
