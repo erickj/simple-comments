@@ -45,9 +45,6 @@ module.exports = function(grunt) {
     this.files.forEach(function(files) {
       var outputFilename = [name, targetName, 'autogen', 'js'].join('.');
       var outputPath = path.join(files.dest, outputFilename);
-      grunt.log.write('Removing ' + outputPath + '...');
-      fs.unlinkSync(outputPath);
-      grunt.log.ok();
 
       var fileNames = files.src;
       grunt.log.write('Collecting goog.provides for files...');
