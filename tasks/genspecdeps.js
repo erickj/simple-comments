@@ -1,29 +1,34 @@
 var fs = require('fs');
 var path = require('path');
 
-var filterGoogProvides = function(fileNames) {
+/**
+ * Returns the namespaces provided in all {@code fileNames}.
+ * @param {!Array.<string>} fileNames files to grep for goog.provide namespaces
+ * @return {!Array.<string>} provided namespaces
+ */
+var filterGoogNamespaces = function(fileNames) {
   var outerPattern = /^goog\.provide\(\'.+\'\);$/mg;
   var innerPattern = /^goog\.provide\(\'(.+)\'\);$/;
-  var googProvides = [];
+  var googNamespaces = [];
   fileNames.forEach(function(fileName) {
     var fileContent = fs.readFileSync(fileName, {encoding: 'utf8'});
     var provideLines = fileContent.match(outerPattern) || [];
     provideLines.forEach(function(line) {
       var provideTarget = line.match(innerPattern);
       if (provideTarget && provideTarget[1]) {
-        googProvides.push(provideTarget[1]);
+        googNamespaces.push(provideTarget[1]);
       }
     });
   });
 
-  return googProvides;
+  return googNamespaces;
 };
 
-var writeSpecRequires = function(googProvides, outputName, provideTarget) {
+var writeSpecRequires = function(googNamespaces, outputName, provideTarget) {
   var autoGenComment =
       '/** DO NOT EDIT: This files was auto-generated. Any changes will be lost. */';
   var provide = 'goog.provide(\'' + provideTarget + '\');';
-  var content = googProvides.map(function(namespace) {
+  var content = googNamespaces.map(function(namespace) {
                   if (namespace == provideTarget) {
                     throw Error('Circular dependency with namespace ' + namespace);
                   }
@@ -48,11 +53,11 @@ module.exports = function(grunt) {
 
       var fileNames = files.src;
       grunt.log.write('Collecting goog.provides for files...');
-      var googProvides = filterGoogProvides(fileNames);
+      var googNamespaces = filterGoogNamespaces(fileNames);
       grunt.log.ok();
 
       grunt.log.write('Writing genspec file ' + outputFilename + '...');
-      writeSpecRequires(googProvides, outputPath, provideTarget);
+      writeSpecRequires(googNamespaces, outputPath, provideTarget);
       grunt.log.ok();
     });
   });

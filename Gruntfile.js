@@ -1,24 +1,8 @@
 /**
- * @fileoverview The grunt configuration. The following tasks are availble:
- *
- * - clean:build
- * - clean:spec
- * - mkdirs:build
- * - protobuf
- * - closure:concat-src
- * - closure:compile-src
- * - closure:concat-spec
- * - closure:compiler-spec
- * - jasmine
- * - test
- *
- * The [default] task is mapped to [test].
- *
  * For Grunt references see the following links:
  * @see http://gruntjs.com/api/grunt Grunt API
  * @see http://gruntjs.com/configuring-tasks#files Configuring file formats
  * @see http://gruntjs.com/inside-tasks Writing tasks
- *
  */
 var fs = require('fs');
 var path = require('path');
@@ -37,11 +21,13 @@ var pathBuildSpec = 'build/spec';
 
 module.exports = function(grunt) {
   grunt.initConfig({
+    /** Cleans all files in ROOT/build/* */
     clean: {
       build: [pathBuildRoot + '/*'],
       spec: [pathBuildSpec + '/*']
     },
 
+    /** Makes the ROOT/build/* directories */
     mkdirs: {
       build: [
         pathBuildRoot,
@@ -51,6 +37,7 @@ module.exports = function(grunt) {
       ]
     },
 
+    /** Builds protobuffers to goog.proto2.Message classes */
     protobuf: {
       options: {
         protoCompiler: '/usr/bin/protoc',
@@ -60,16 +47,24 @@ module.exports = function(grunt) {
           '/usr/local/src/protobuf-2.5.0/src'
         ]
       },
+      /** task protobuf:build */
       build: {
         src: 'protocol/**/*.proto',
         dest: pathBuildProtocolBuffers
       }
     },
 
+    /**
+     * Writes deps.js files
+     * @see https://developers.google.com/closure/library/docs/depswriter
+     * @see https://github.com/thanpolas/grunt-closure-tools
+     */
     closureDepsWriter: {
       options: {
         closureLibraryPath: pathClosureLibrary,
         root: [pathClosureLibrary + '/closure/goog'],
+        // All roots are relative to the closure root directory, i.e.
+        // <pathClosureLibrary>/closure/goog
         root_with_prefix: [
           '"build/protobuf ../../../../build/protobuf"',
           '"spec ../../../../spec"',
@@ -79,16 +74,19 @@ module.exports = function(grunt) {
           maxBuffer: Math.pow(2, 30)
         }
       },
+      /** task closureDepsWriter:src */
       src: {
         src: ['src/logos/**/*.js'],
         dest: pathBuildClosure + '/deps.js'
       },
+      /** task closureDepsWriter:spec */
       spec: {
         src: ['spec/**/*Spec.js'],
         dest: pathBuildSpec + '/deps.js'
       }
     },
 
+    /** Compiles JS with closure compiler */
     closure: {
       options: {
         library: pathClosureLibrary,
@@ -97,6 +95,7 @@ module.exports = function(grunt) {
         compilerJar: '/usr/local/bin/closure-compiler.jar'
       },
 
+      /** task closure:compile-src */
       'compile-src': {
         src: [
           pathClosureLibrary,
@@ -106,6 +105,7 @@ module.exports = function(grunt) {
         dest: pathBuildClosure
       },
 
+      /** task closure:concat-src */
       'concat-src': {
         src: [
           pathClosureLibrary,
@@ -115,34 +115,39 @@ module.exports = function(grunt) {
         dest: pathBuildClosure
       },
 
+      /** task closure:concat-spec */
       'concat-spec': {
         options: {
-          defaultTarget: 'genspecdeps.all'
+          defaultTarget: 'specdeps.all'
         },
         src: [
           pathClosureLibrary,
           'src/logos',
           pathBuildProtocolBuffers,
+          pathBuildSpec,
           pathSpec
         ],
         dest: pathBuildSpec + '/concat.spec.js'
       },
 
+      /** task closure:compile-spec */
       'compile-spec': {
         options: {
           compilerExterns: 'externs/jasmine.js',
-          defaultTarget: 'genspecdeps.all'
+          defaultTarget: 'specdeps.all'
         },
         src: [
           pathClosureLibrary,
           'src/logos',
           pathBuildProtocolBuffers,
+          pathBuildSpec,
           pathSpec
         ],
         dest: pathBuildSpec
       }
     },
 
+    /** Runs gjslint on task targets */
     gjslint: {
       options: {
         flags: [
@@ -154,24 +159,35 @@ module.exports = function(grunt) {
           name: 'console'
         }
       },
+
+      /** task gjslint:src for linting src/logos */
       src: {
         src: 'src/logos/**/*.js'
       },
+
+      /** task gjslint:spec for linting specs */
       spec: {
         src: 'spec/**/*.js'
       }
     },
 
+    // TODO(erick): This is a totally shitty name, but since things are just
+    // working, I'm too lazy to give this a better definition. This should be
+    // cleaned up to indicate that it's building a file of goog.require targets
+    // for the closure:concat-spec task.
+    /** task genspecdeps builds an autogen file for goog.require namespaces */
     genspecdeps: {
       all: {
         options: {
-          provideTarget: 'genspecdeps.all'
+          provideTarget: 'specdeps.all',
+          namespacePrefix: 'spec.'
         },
         src: 'spec/**/*.js',
-        dest: pathSpec
+        dest: pathBuildSpec
       }
     },
 
+    /** Jasmine phantomjs runner config (client specs) */
     jasmine: {
       all: {
         options : {
@@ -180,10 +196,12 @@ module.exports = function(grunt) {
       }
     },
 
+    /** Jasmine nodejs runner config (server specs) */
     jasmine_node: {
       all: [pathBuildSpec]
     },
 
+    /** Loads required deps.js for the closure nodejs bootstrapper. */
     'load-closure-bootstrap': {
       spec: {
         src: pathBuildSpec + '/deps.js'
@@ -191,18 +209,25 @@ module.exports = function(grunt) {
     }
   });
 
+  /** Loads all files as tasks in the ROOT/tasks directory */
   grunt.loadTasks('tasks');
 
+  /** Loads NPM tasks */
   grunt.loadNpmTasks('grunt-closure-tools');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-gjslint');
   grunt.loadNpmTasks('grunt-jasmine-node');
 
+  // TODO(erick): This is just a mess...
+  /** Custom tasks */
   grunt.registerTask('init', ['clean', 'mkdirs', 'protobuf']);
-  grunt.registerTask('build-deps', ['init', 'closureDepsWriter']);
+  grunt.registerTask('build-deps', ['closureDepsWriter']);
 
-  /** Task to bootstrap nodejs for using goog.require. */
+  /**
+   * Task to bootstrap nodejs for using goog.require.
+   * requries a deps.js file to be created, @see task build-deps
+   */
   grunt.registerMultiTask(
     'load-closure-bootstrap', 'Bootstrap node for goog.require', function() {
       require('./src/closure-library/closure/goog/bootstrap/nodejs.js');
@@ -226,20 +251,32 @@ module.exports = function(grunt) {
   /** Task to run specs on phantomjs. */
   grunt.registerTask(
       'client-specs', 'Run jasmine tests on node', function() {
-    var concatTask = 'closure:concat-spec';
+    grunt.task.run('genspecdeps:all');
+    grunt.task.run('closure:concat-spec');
+    grunt.task.run('jasmine:all');
+  });
+
+  /** Task to compile specs. */
+  grunt.registerTask(
+      'compile-specs', 'JS Compiles specs', function() {
+    // TODO(erick): 'init' task is only here because running 'compile-specs'
+    // after client-specs fails with error:
+    // 'Base file should not provide or require namespaces.'
+    // It probably has to do with the concat-spec output file being
+    // in the include path of the compile-spec input.
     grunt.task.run('init');
     grunt.task.run('genspecdeps:all');
-    grunt.task.run(concatTask);
-    grunt.task.run('jasmine:all');
+    grunt.task.run('closure:compile-spec');
   });
 
   /** Task to clean, concat, run, and compile specs. */
   grunt.registerTask('test-all', 'Runs specs for client and server targets ',
-      ['gjslint', 'server-specs', 'client-specs', 'closure:compile-spec']);
+      ['init', 'gjslint', 'server-specs', 'client-specs', 'compile-specs']);
 
   /** Task to clean, concat, run, and compile specs. */
   grunt.registerTask('test-specs', 'Runs specs for server and client targets ',
-      ['server-specs', 'client-specs']);
+      ['init', 'server-specs', 'client-specs']);
 
+  /** Task default, runs client and server specs */
   grunt.registerTask('default', 'test-specs');
 };
