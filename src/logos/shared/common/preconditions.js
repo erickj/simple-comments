@@ -80,6 +80,7 @@ logos.common.preconditions.checkState = function(expression, opt_message) {
 // TODO(erick): The "@return {!T}" doesn't actually cast the template type to a
 // non-null type, :( It would be really nice if this worked so the precondition
 // could just be used as an implicit cast.
+// @see https://groups.google.com/forum/#!topic/closure-library-discuss/UgsA462RiFY
 /**
  * Checks the given value is not null, or throws a NullPointer error.
  * @param {T} given
