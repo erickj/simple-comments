@@ -32,7 +32,8 @@ goog.inherits(logos.storage.MessageStorage, goog.storage.Storage);
 
 
 /**
- * @return {T}
+ * @param {string} key
+ * @return {?T}
  * @template T
  * @override
  */
