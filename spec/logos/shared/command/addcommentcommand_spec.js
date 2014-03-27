@@ -1,7 +1,7 @@
 goog.provide('spec.logos.command.AddCommentCommandSpec');
 
 goog.require('logos.command.AddCommentCommand');
-goog.require('logos.command.CommandContext');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Comment');
@@ -27,7 +27,7 @@ describe('logos.command.AddCommentCommand', function() {
     thread = new logos.model.Thread('thread-id', logos.model.Thread.Topic.MAIN);
     conversation = new logos.model.Conversation('convo-id');
     model = new logos.model.Model(new logos.model.VersionProvider());
-    commandContext = new logos.command.CommandContext(model);
+    commandContext = new logos.command.CommandExecutionContext(model);
     command = new logos.command.AddCommentCommand(
         'convo-id', 'thread-id', comment);
   });

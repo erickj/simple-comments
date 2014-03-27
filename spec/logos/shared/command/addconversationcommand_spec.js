@@ -1,7 +1,7 @@
 goog.provide('spec.logos.command.AddConversationCommandSpec');
 
 goog.require('logos.command.AddConversationCommand');
-goog.require('logos.command.CommandContext');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Conversation');
@@ -17,7 +17,7 @@ describe('logos.command.AddConversationCommand', function() {
   beforeEach(function() {
     conversation = new logos.model.Conversation('convo-id');
     model = new logos.model.Model(new logos.model.VersionProvider());
-    commandContext = new logos.command.CommandContext(model);
+    commandContext = new logos.command.CommandExecutionContext(model);
     command = new logos.command.AddConversationCommand(conversation);
   });
 

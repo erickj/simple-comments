@@ -1,4 +1,4 @@
-goog.provide('logos.command.CommandContext');
+goog.provide('logos.command.CommandExecutionContext');
 
 
 
@@ -8,13 +8,13 @@ goog.provide('logos.command.CommandContext');
  * @struct
  * @final
  */
-logos.command.CommandContext = function(model) {
+logos.command.CommandExecutionContext = function(model) {
   /** @private {!logos.model.Model} */
   this.model_ = model;
 };
 
 
 /** @return {!logos.model.Model} */
-logos.command.CommandContext.prototype.getModel = function() {
+logos.command.CommandExecutionContext.prototype.getModel = function() {
   return this.model_;
 };

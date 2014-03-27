@@ -1,7 +1,7 @@
 goog.provide('spec.logos.command.AddUserCommandSpec');
 
 goog.require('logos.command.AddUserCommand');
-goog.require('logos.command.CommandContext');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.command.NoopCommand');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Model');
@@ -17,7 +17,7 @@ describe('logos.command.AddUserCommand', function() {
   beforeEach(function() {
     user = new logos.model.User('user-id', 'erick@j.com', 'Erick J');
     model = new logos.model.Model(new logos.model.VersionProvider());
-    commandContext = new logos.command.CommandContext(model);
+    commandContext = new logos.command.CommandExecutionContext(model);
     command = new logos.command.AddUserCommand(user);
   });
 

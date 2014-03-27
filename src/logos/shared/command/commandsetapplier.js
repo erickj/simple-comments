@@ -12,7 +12,7 @@ goog.require('logos.common.preconditions.IllegalStateException');
 /**
  * Applies CommandSets to the model.
  * @param {!logos.event.EventBus} eventBus
- * @param {!logos.command.CommandContext} commandContext
+ * @param {!logos.command.CommandExecutionContext} commandContext
  * @param {!logos.command.CommandSetHistory} commandSetHistory
  * @param {!logos.model.VersionProvider} modelVersionProvider
  * @constructor
@@ -24,7 +24,7 @@ logos.command.CommandSetApplier = function(
   /** @private {!logos.event.EventBus} */
   this.eventBus_ = eventBus;
 
-  /** @private {!logos.command.CommandContext} */
+  /** @private {!logos.command.CommandExecutionContext} */
   this.commandContext_ = commandContext;
 
   /** @private {!logos.command.CommandSetHistory} */

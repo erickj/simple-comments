@@ -4,7 +4,8 @@ goog.require('logos.command.Command');
 goog.require('logos.command.NoopCommand');
 
 describe('logos.command.NoopCommand', function() {
-  var commandContext = /** @type {!logos.command.CommandContext} */ ({});
+  var commandContext =
+      /** @type {!logos.command.CommandExecutionContext} */ ({});
   var noopCommand = logos.command.NoopCommand.INSTANCE;
 
   describe('#getType', function() {

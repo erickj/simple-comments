@@ -35,7 +35,7 @@ logos.command.AbstractCommand.prototype.apply = function(commandContext) {
 
 /**
  * To be overriden by subclasses.
- * @param {!logos.command.CommandContext} commandContext
+ * @param {!logos.command.CommandExecutionContext} commandContext
  * @protected
  */
 logos.command.AbstractCommand.prototype.applyInternal = goog.abstractMethod;

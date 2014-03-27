@@ -30,7 +30,7 @@ logos.command.Command.prototype.getType = goog.abstractMethod;
 
 /**
  * Applies the command.
- * @param {!logos.command.CommandContext} commandContext
+ * @param {!logos.command.CommandExecutionContext} commandContext
  */
 logos.command.Command.prototype.apply = goog.abstractMethod;
 
@@ -40,7 +40,7 @@ logos.command.Command.prototype.apply = goog.abstractMethod;
  * applied. False indicates the commmand should not be applied but the reason
  * is not an error. An error is thrown if the command should not be applied and
  * the command should not have been requested.
- * @param {!logos.command.CommandContext} commandContext
+ * @param {!logos.command.CommandExecutionContext} commandContext
  * @return {boolean} True indicates success.
  * @throws {logos.common.preconditions.IllegalStateException}
  */

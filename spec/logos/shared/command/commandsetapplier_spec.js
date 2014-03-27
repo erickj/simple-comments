@@ -2,7 +2,7 @@ goog.provide('spec.logos.command.CommandSetApplier');
 
 goog.require('goog.events');
 goog.require('goog.testing.events.EventObserver');
-goog.require('logos.command.CommandContext');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.command.CommandSet');
 goog.require('logos.command.CommandSetApplier');
 goog.require('logos.command.CommandSetHistory');
@@ -23,7 +23,7 @@ describe('logos.command.CommandSetApplier', function() {
     eventBus = new logos.event.EventBus();
     modelVersionProvider = new logos.model.VersionProvider();
     model = new logos.model.Model(modelVersionProvider);
-    commandContext = new logos.command.CommandContext(model);
+    commandContext = new logos.command.CommandExecutionContext(model);
     commandSetHistory = new logos.command.CommandSetHistory();
 
     commandSetApplier = new logos.command.CommandSetApplier(

@@ -1,7 +1,7 @@
 goog.provide('spec.logos.command.AddThreadCommandSpec');
 
 goog.require('logos.command.AddThreadCommand');
-goog.require('logos.command.CommandContext');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.common.preconditions.IllegalStateException');
 goog.require('logos.model.Conversation');
 goog.require('logos.model.Model');
@@ -19,7 +19,7 @@ describe('logos.command.AddThreadCommand', function() {
     thread = new logos.model.Thread('thread-id', logos.model.Thread.Topic.MAIN);
     conversation = new logos.model.Conversation('convo-id');
     model = new logos.model.Model(new logos.model.VersionProvider());
-    commandContext = new logos.command.CommandContext(model);
+    commandContext = new logos.command.CommandExecutionContext(model);
     command = new logos.command.AddThreadCommand('convo-id', thread);
   });
 
