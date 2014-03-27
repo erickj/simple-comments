@@ -4,13 +4,14 @@ goog.provide('logos.model.VersionProvider');
 
 /**
  * A class to provide the model version number and control incrementing it.
+ * @param {number=} opt_version The version, default is 0.
  * @constructor
  * @struct
  * @final
  */
-logos.model.VersionProvider = function() {
+logos.model.VersionProvider = function(opt_version) {
   /** @private {number} */
-  this.version_ = 0;
+  this.version_ = opt_version || 0;
 };
 
 
