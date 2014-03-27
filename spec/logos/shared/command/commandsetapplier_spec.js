@@ -2,12 +2,12 @@ goog.provide('spec.logos.command.CommandSetApplier');
 
 goog.require('goog.events');
 goog.require('goog.testing.events.EventObserver');
-goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.command.CommandSet');
 goog.require('logos.command.CommandSetApplier');
 goog.require('logos.command.CommandSetHistory');
 goog.require('logos.event.EventBus');
 goog.require('logos.model.Model');
+goog.require('logos.model.State');
 goog.require('logos.model.VersionProvider');
 goog.require('spec.helpers.fake.FakeCommand');
 
@@ -15,7 +15,7 @@ describe('logos.command.CommandSetApplier', function() {
   var eventBus;
   var modelVersionProvider;
   var model;
-  var commandContext;
+  var modelState;
   var commandSetHistory;
   var commandSetApplier;
 
@@ -23,11 +23,11 @@ describe('logos.command.CommandSetApplier', function() {
     eventBus = new logos.event.EventBus();
     modelVersionProvider = new logos.model.VersionProvider();
     model = new logos.model.Model(modelVersionProvider);
-    commandContext = new logos.command.CommandExecutionContext(model);
+    modelState = new logos.model.State(modelVersionProvider, model);
     commandSetHistory = new logos.command.CommandSetHistory();
 
     commandSetApplier = new logos.command.CommandSetApplier(
-        eventBus, commandContext, commandSetHistory, modelVersionProvider);
+        eventBus, commandSetHistory, modelState);
   });
 
   describe('#maybeApplyCommandSet', function() {

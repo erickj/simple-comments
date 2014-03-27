@@ -4,6 +4,7 @@ goog.provide('logos.command.CommandSetApplier');
 goog.require('goog.events');
 goog.require('goog.events.Event');
 goog.require('logos.command.Command');
+goog.require('logos.command.CommandExecutionContext');
 goog.require('logos.common.preconditions');
 goog.require('logos.common.preconditions.IllegalStateException');
 
@@ -12,26 +13,22 @@ goog.require('logos.common.preconditions.IllegalStateException');
 /**
  * Applies CommandSets to the model.
  * @param {!logos.event.EventBus} eventBus
- * @param {!logos.command.CommandExecutionContext} commandContext
  * @param {!logos.command.CommandSetHistory} commandSetHistory
- * @param {!logos.model.VersionProvider} modelVersionProvider
+ * @param {!logos.model.State} modelState
  * @constructor
  * @struct
  * @final
  */
-logos.command.CommandSetApplier = function(
-    eventBus, commandContext, commandSetHistory, modelVersionProvider) {
+logos.command.CommandSetApplier =
+    function(eventBus, commandSetHistory, modelState) {
   /** @private {!logos.event.EventBus} */
   this.eventBus_ = eventBus;
-
-  /** @private {!logos.command.CommandExecutionContext} */
-  this.commandContext_ = commandContext;
 
   /** @private {!logos.command.CommandSetHistory} */
   this.commandSetHistory_ = commandSetHistory;
 
-  /** @private {!logos.model.VersionProvider} */
-  this.modelVersionProvider_ = modelVersionProvider;
+  /** @private {!logos.model.State} */
+  this.modelState_ = modelState;
 };
 
 
@@ -66,10 +63,12 @@ logos.command.CommandSetApplier.prototype.maybeApplyCommandSet =
     commandSet = this.transformCommandSet_(commandSet);
   }
 
+  var commandExecutionContext =
+      new logos.command.CommandExecutionContext(this.modelState_.getModel());
   var commands = commandSet.getCommands();
   for (var i = 0; i < commands.length; i++) {
     try {
-      if (!commands[i].canApply(this.commandContext_)) {
+      if (!commands[i].canApply(commandExecutionContext)) {
         return false;
       }
     } catch (e) {
@@ -82,15 +81,14 @@ logos.command.CommandSetApplier.prototype.maybeApplyCommandSet =
     }
   }
 
-  var currentModelVersion = this.getCurrentModelVersion_();
   this.eventBus_.dispatchEvent(new logos.command.CommandSetApplicationEvent(
       logos.command.CommandSetApplier.EventType.BEFORE_APPLY, commandSet));
 
   for (var i = 0; i < commands.length; i++) {
-    commands[i].apply(this.commandContext_);
+    commands[i].apply(commandExecutionContext);
   }
   this.commandSetHistory_.addCommandSetToHistory(commandSet);
-  this.modelVersionProvider_.incrementVersion();
+  this.modelState_.incrementVersion();
 
   this.eventBus_.dispatchEvent(new logos.command.CommandSetApplicationEvent(
       logos.command.CommandSetApplier.EventType.AFTER_APPLY, commandSet));
@@ -140,7 +138,7 @@ logos.command.CommandSetApplier.prototype.transformCommandSet_ =
  * @private
  */
 logos.command.CommandSetApplier.prototype.getCurrentModelVersion_ = function() {
-  return this.modelVersionProvider_.getVersion();
+  return this.modelState_.getVersion();
 };
 
 
