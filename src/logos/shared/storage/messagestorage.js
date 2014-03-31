@@ -1,26 +1,25 @@
 goog.provide('logos.storage.MessageStorage');
 
 goog.require('goog.asserts');
-goog.require('goog.storage.Storage');
-goog.require('goog.storage.mechanism.Mechanism');
+goog.require('goog.json');
+goog.require('logos.storage.mechanism.Mechanism');
 
 
 
 /**
  * A storage class for storing a single protocol buffer message type.
- * @param {!goog.storage.mechanism.Mechanism} mechanism The underlying storage
- *     mechanism.
+ * @param {!logos.storage.mechanism.Mechanism.<string>} mechanism The underlying
+ *     storage mechanism.
  * @param {!goog.proto2.Descriptor} descriptor
  * @param {!goog.proto2.Serializer} serializer
  * @constructor
- * @extends {goog.storage.Storage}
+ * @struct
  * @final
  * @template T
- * NB: This cannot be a struct since {@code goog.storage.Storage} is not a
- * struct.
  */
 logos.storage.MessageStorage = function(mechanism, descriptor, serializer) {
-  goog.base(this, mechanism);
+  /** @private {!logos.storage.mechanism.Mechanism.<string>} */
+  this.mechanism_ = mechanism;
 
   /** @private {!goog.proto2.Descriptor} */
   this.descriptor_ = descriptor;
@@ -28,35 +27,49 @@ logos.storage.MessageStorage = function(mechanism, descriptor, serializer) {
   /** @private {!goog.proto2.Serializer} */
   this.serializer_ = serializer;
 };
-goog.inherits(logos.storage.MessageStorage, goog.storage.Storage);
 
 
 /**
  * @param {string} key
- * @return {?T}
- * @template T
- * @override
+ * @return {!goog.Promise.<T>}
  */
 logos.storage.MessageStorage.prototype.get = function(key) {
-  var json = goog.base(this, 'get', key);
-  if (!goog.isDef(json)) {
-    return null;
-  }
-  return this.serializer_.deserialize(this.descriptor_, json);
+  var jsonPromise = this.mechanism_.get(key);
+  return jsonPromise.then(this.deserializePbJson_, undefined, this);
+};
+
+
+/**
+ * @param {string}
+ * @return {T}
+ * @private
+ */
+logos.storage.MessageStorage.prototype.deserializePbJson_ = function(value) {
+  return this.serializer_.deserialize(
+      this.descriptor_, goog.json.parse(value));
 };
 
 
 /**
  * @param {string} key
  * @param {T} message
- * @template T
- * @override
+ * @return {!goog.Promise.<boolean>}
  */
 logos.storage.MessageStorage.prototype.set = function(key, message) {
   if (!message) {
-    return;
+    return goog.Promise.reject('Invalid value for set');
   }
   // Make sure we're storing the correct type
   goog.asserts.assert(message.getDescriptor() == this.descriptor_);
-  goog.base(this, 'set', key, this.serializer_.serialize(message));
+  return this.mechanism_.set(
+      key, goog.json.serialize(this.serializer_.serialize(message)));
+};
+
+
+/**
+ * @param {string} key
+ * @return {!goog.Promise.<boolean>}
+ */
+logos.storage.MessageStorage.prototype.remove = function(key) {
+  return this.mechanism_.remove(key);
 };
