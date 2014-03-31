@@ -187,6 +187,8 @@ module.exports = function(grunt) {
       }
     },
 
+    // TODO(erick): I'm using both jasmine 2.0 for client tests and jasmine 1.3
+    // for server tests... uh-oh - should upgrade server tests to 2.0.
     /** Jasmine phantomjs runner config (client specs) */
     jasmine: {
       all: {

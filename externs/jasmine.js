@@ -28,6 +28,16 @@
 var jasmine = {};
 
 
+// TODO(erick): I'm using both jasmine 2.0 for client tests and jasmine 1.3 for
+// server tests... uh-oh - should upgrade server tests to 2.0. These are the
+// externs for 1.3, will need to update to 2.0 externs.
+
+// NB: jasmine.addMatchers is only Jasmine 2.0!!! Not available in 1.3. See
+// jasmine.Helper#addMatchers for 1.3
+/** @param {*} value */
+jasmine.addMatchers = function(value) {};
+
+
 /**
  * @param {string} name
  * @return {!jasmine.Spy} spy

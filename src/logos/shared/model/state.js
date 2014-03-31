@@ -10,7 +10,7 @@ goog.provide('logos.model.State');
  * @final
  */
 logos.model.State = function(versionProvider, model) {
-  /** @private {!logos.model.State} */
+  /** @private {!logos.model.VersionProvider} */
   this.versionProvider_ = versionProvider;
 
   /** @private {!logos.model.Model} */
@@ -30,9 +30,7 @@ logos.model.State.prototype.getVersion = function() {
 };
 
 
-/**
- * Increments the model version.
- */
+/** Increments the model version. */
 logos.model.State.prototype.incrementVersion = function() {
-  return this.versionProvider_.incrementVersion();
+  this.versionProvider_.incrementVersion();
 };

@@ -41,7 +41,7 @@ describe('logos.storage.mechanism.InMemoryMechanism', function() {
   describe('#set', function() {
     it('sets the value and fulfills the promise with true', function() {
       expect(mechanism.set('key', 'value')).toFulfillPromise(true, mockClock);
-      expect(mechanism.get('key')).toFulfillPromise('value', mockClock)
+      expect(mechanism.get('key')).toFulfillPromise('value', mockClock);
     });
   });
 

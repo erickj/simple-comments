@@ -40,7 +40,7 @@ logos.storage.MessageStorage.prototype.get = function(key) {
 
 
 /**
- * @param {string}
+ * @param {string} value
  * @return {T}
  * @private
  */
